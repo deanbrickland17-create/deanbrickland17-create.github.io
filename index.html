@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================= -->
+<!--  EDIT #1 — Browser tab title and description                  -->
+<!-- ============================================================= -->
+<title>Dean Brickland — Spatial Planner</title>
+<meta name="description" content="Personal site of a spatial planner working across policy, community, and technology in Ireland.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Spectral:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* =============================================================
+     DESIGN TOKENS
+     Palette: drafting ink + ordnance-map green on vellum paper.
+     ============================================================= */
+  :root{
+    --paper:    #EFF1EC;   /* cool drafting paper (not warm cream)   */
+    --paper-2:  #E6E9E1;   /* faint panel for alternating band       */
+    --ink:      #17242A;   /* drafting-ink near-black slate-teal      */
+    --land:     #536A3C;   /* muted ordnance green — the one accent   */
+    --land-deep:#43592F;   /* darker green for link text (contrast)   */
+    --slate:    #5C6A61;   /* secondary text, captions, labels        */
+    --line:     #C6CEC1;   /* grid + hairline dividers                */
+
+    --wrap: 1120px;
+    --pad: clamp(1.25rem, 5vw, 4rem);
+
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --disp: "Archivo", system-ui, sans-serif;
+    --body: "Spectral", Georgia, serif;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    font-family:var(--body);
+    font-size:1.075rem;
+    line-height:1.62;
+    color:var(--ink);
+    background-color:var(--paper);
+    /* graph-paper underlay: fine grid + heavier survey grid */
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:
+      140px 140px, 140px 140px,   /* major lines */
+      28px 28px, 28px 28px;        /* minor lines */
+    background-position:0 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Soften the grid so it reads as a whisper, not a table */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:var(--paper);
+    opacity:.78;
+    z-index:-1;
+    pointer-events:none;
+  }
+
+  .wrap{ max-width:var(--wrap); margin-inline:auto; padding-inline:var(--pad); }
+
+  a{ color:var(--land-deep); text-decoration-thickness:1px; text-underline-offset:3px; }
+  a:hover{ color:var(--ink); }
+
+  /* Shared label / eyebrow style — the "annotation" voice */
+  .label{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--slate);
+  }
+
+  :focus-visible{
+    outline:2.5px solid var(--land);
+    outline-offset:3px;
+    border-radius:1px;
+  }
+
+  /* =============================================================
+     NAV
+     ============================================================= */
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1rem; flex-wrap:wrap;
+    padding-block:1.4rem;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:var(--mono); font-weight:500;
+    font-size:.82rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink); text-decoration:none;
+    display:inline-flex; align-items:center; gap:.55rem;
+  }
+  .brand .tick{ width:12px; height:12px; border:1.5px solid var(--land); display:inline-block; }
+  .nav ul{ display:flex; gap:1.4rem; list-style:none; margin:0; padding:0; flex-wrap:wrap; }
+  .nav a{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.14em;
+    text-transform:uppercase; text-decoration:none; color:var(--slate);
+  }
+  .nav a:hover{ color:var(--ink); }
+
+  /* =============================================================
+     HERO — the drawing sheet opens with a plan
+     ============================================================= */
+  .hero{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:clamp(1.5rem,4vw,3.5rem);
+    align-items:center;
+    padding-block:clamp(3rem,8vw,6.5rem);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-coord{ display:block; margin-bottom:1.4rem; }
+  .hero h1{
+    font-family:var(--disp);
+    font-weight:800;
+    font-size:clamp(2.5rem, 6.4vw, 5rem);
+    line-height:1.02;
+    letter-spacing:-.02em;
+    margin:0 0 1.5rem;
+    text-wrap:balance;
+  }
+  .hero h1 em{ font-style:normal; color:var(--land); }
+  .hero-lede{
+    font-size:clamp(1.1rem,1.6vw,1.3rem);
+    max-width:34ch;
+    margin:0 0 2rem;
+    color:#2c3a38;
+  }
+  .hero-actions{ display:flex; gap:.75rem 1.5rem; flex-wrap:wrap; align-items:center; }
+  .btn{
+    font-family:var(--mono); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase;
+    text-decoration:none; color:var(--paper); background:var(--ink);
+    padding:.85rem 1.4rem; display:inline-block; transition:background .18s ease;
+  }
+  .btn:hover{ background:var(--land-deep); color:var(--paper); }
+  .btn-ghost{
+    color:var(--ink); background:transparent; padding:.85rem 0;
+    text-decoration:underline; text-decoration-color:var(--line);
+  }
+  .btn-ghost:hover{ background:transparent; color:var(--land-deep); text-decoration-color:var(--land); }
+
+  /* The plan drawing */
+  .plan{ width:100%; height:auto; display:block; }
+
+  /* =============================================================
+     SECTIONS
+     ============================================================= */
+  .section{ padding-block:clamp(3rem,7vw,5.5rem); border-bottom:1px solid var(--line); }
+  .section-head{ display:flex; align-items:baseline; gap:1rem; margin-bottom:2.2rem; }
+  .section-head .label{ padding-top:.4rem; white-space:nowrap; }
+  .section h2{
+    font-family:var(--disp); font-weight:700;
+    font-size:clamp(1.55rem,3.4vw,2.35rem);
+    line-height:1.1; letter-spacing:-.01em; margin:0;
+  }
+  .prose{ max-width:60ch; }
+  .prose p{ margin:0 0 1.15rem; }
+  .prose p:last-child{ margin-bottom:0; }
+
+  /* Focus areas — three domains, tagged not numbered */
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .cell{ background:var(--paper); padding:1.75rem 1.5rem; }
+  .cell .tag{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--land); border:1px solid var(--land); padding:.15rem .5rem; display:inline-block; margin-bottom:1rem;
+  }
+  .cell h3{ font-family:var(--disp); font-weight:700; font-size:1.15rem; margin:0 0 .6rem; letter-spacing:-.01em; }
+  .cell p{ margin:0; font-size:.98rem; color:#33403d; }
+
+  /* Writing — a revision schedule of entries */
+  .schedule{ border-top:1px solid var(--ink); }
+  .row{
+    display:grid; grid-template-columns:auto 1fr auto; gap:1rem 1.5rem; align-items:baseline;
+    padding:1.15rem 0; border-bottom:1px solid var(--line); text-decoration:none; color:var(--ink);
+  }
+  .row:hover{ color:var(--land-deep); }
+  .row:hover .row-title{ text-decoration:underline; text-underline-offset:3px; }
+  .row-date{ font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; color:var(--slate); }
+  .row-title{ font-family:var(--disp); font-weight:600; font-size:1.05rem; }
+  .row-kind{ font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--slate); }
+
+  /* Contact */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+  .contact-grid .prose{ align-self:center; }
+  .channels{ list-style:none; margin:0; padding:0; border-top:1px solid var(--ink); }
+  .channels li{ border-bottom:1px solid var(--line); }
+  .channels a{
+    display:flex; justify-content:space-between; gap:1rem; padding:1rem 0; text-decoration:none; color:var(--ink);
+    font-family:var(--mono); font-size:.85rem; letter-spacing:.04em;
+  }
+  .channels a:hover{ color:var(--land-deep); }
+  .channels .k{ color:var(--slate); text-transform:uppercase; font-size:.7rem; letter-spacing:.16em; }
+
+  /* =============================================================
+     FOOTER — drawing title block
+     ============================================================= */
+  footer{ padding-block:clamp(2.5rem,6vw,4rem); }
+  .titleblock{ border:1.5px solid var(--ink); display:grid; grid-template-columns:2fr 1fr 1fr; }
+  .titleblock > div{ border-right:1px solid var(--line); padding:1rem 1.15rem; }
+  .titleblock > div:last-child{ border-right:0; }
+  .tb-name{ grid-column:1 / -1; border-right:0; border-bottom:1px solid var(--ink); }
+  .tb-k{ font-family:var(--mono); font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); display:block; margin-bottom:.35rem; }
+  .tb-v{ font-family:var(--disp); font-weight:700; font-size:1.05rem; letter-spacing:-.01em; }
+  .titleblock .tb-name .tb-v{ font-size:1.4rem; }
+  .tb-sub{ font-family:var(--mono); font-size:.78rem; color:var(--slate); }
+
+  /* =============================================================
+     MOTION — a plan being drawn, disabled if reduced motion
+     ============================================================= */
+  @media (prefers-reduced-motion: no-preference){
+    .draw{ stroke-dasharray:2400; stroke-dashoffset:2400; animation:draw 2.2s ease forwards; }
+    .draw.d2{ animation-delay:.35s; }
+    .draw.d3{ animation-delay:.7s; }
+    .fade{ opacity:0; animation:fade .9s ease 1.5s forwards; }
+    .rise{ opacity:0; transform:translateY(14px); animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
+    .r2{ animation-delay:.08s; } .r3{ animation-delay:.16s; } .r4{ animation-delay:.24s; }
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @keyframes fade{ to{ opacity:1; } }
+  @keyframes rise{ to{ opacity:1; transform:none; } }
+
+  /* =============================================================
+     RESPONSIVE
+     ============================================================= */
+  @media (max-width: 860px){
+    .hero{ grid-template-columns:1fr; }
+    .plan-wrap{ order:2; max-width:420px; }
+    .grid-3{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; gap:2rem; }
+    .titleblock{ grid-template-columns:1fr 1fr; }
+    .tb-name{ grid-column:1 / -1; }
+  }
+  @media (max-width: 520px){
+    .section-head{ flex-direction:column; gap:.5rem; }
+    .row{ grid-template-columns:1fr auto; }
+    .row-date{ grid-column:1 / -1; }
+    .nav ul{ gap:1rem; }
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <!-- ============================ NAV ============================ -->
+  <!-- EDIT #2 — your name / initials in the brand, below -->
+  <nav class="nav">
+    <a class="brand" href="#top"><span class="tick"></span> Dean Brickland</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#focus">Focus</a></li>
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============================ HERO ============================ -->
+  <header id="top" class="hero">
+    <div>
+      <!-- EDIT #3 — coordinate line: your location / role tag -->
+      <span class="label hero-coord fade">53.29°N&nbsp;&nbsp;6.20°W&nbsp;&nbsp;/&nbsp;&nbsp;Spatial Planning · Ireland</span>
+
+      <!-- EDIT #4 — the headline. The word in green gets the accent. -->
+      <h1 class="rise">Shaping how places grow, where policy, community and <em>technology</em> meet.</h1>
+
+      <!-- EDIT #5 — one or two sentences about you -->
+      <p class="hero-lede rise r2">I'm a spatial planner working in Irish local government and professional practice, with a focus on how planning systems adopt new tools responsibly.</p>
+
+      <div class="hero-actions rise r3">
+        <a class="btn" href="#contact">Get in touch</a>
+        <a class="btn btn-ghost" href="#writing">Read my writing</a>
+      </div>
+    </div>
+
+    <!-- SIGNATURE: an abstract site plan. Decorative-but-thematic. -->
+    <div class="plan-wrap" aria-hidden="true">
+      <svg class="plan" viewBox="0 0 400 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="8" stroke="#536A3C" stroke-width="1.1" opacity="0.55"/>
+          </pattern>
+        </defs>
+
+        <!-- sheet frame -->
+        <rect x="4" y="4" width="392" height="432" stroke="#C6CEC1" stroke-width="1"/>
+        <rect x="16" y="16" width="368" height="408" stroke="#C6CEC1" stroke-width="1"/>
+
+        <!-- edge tick marks -->
+        <g stroke="#C6CEC1" stroke-width="1">
+          <line x1="108" y1="16" x2="108" y2="26"/><line x1="200" y1="16" x2="200" y2="26"/><line x1="292" y1="16" x2="292" y2="26"/>
+          <line x1="16" y1="130" x2="26" y2="130"/><line x1="16" y1="224" x2="26" y2="224"/><line x1="16" y1="318" x2="26" y2="318"/>
+        </g>
+
+        <!-- site boundary (red-line convention, drawn dashed) -->
+        <path class="draw" d="M60 70 L330 58 L344 250 L300 380 L96 372 L52 210 Z"
+              stroke="#17242A" stroke-width="1.6" stroke-dasharray="7 5"/>
+
+        <!-- open-space parcel, hatched green -->
+        <path class="fade" d="M60 70 L188 64 L196 196 L64 204 Z" fill="url(#hatch)"/>
+        <path class="draw d2" d="M60 70 L188 64 L196 196 L64 204 Z" stroke="#43592F" stroke-width="1.2"/>
+
+        <!-- internal subdivision lines -->
+        <g class="draw d2" stroke="#17242A" stroke-width="1">
+          <path d="M196 196 L200 62"/>
+          <path d="M196 196 L340 190"/>
+          <path d="M196 196 L200 372"/>
+        </g>
+
+        <!-- road / access curve, double line -->
+        <g class="draw d3" stroke="#17242A" stroke-width="1.1" fill="none">
+          <path d="M52 300 C 150 296, 210 320, 340 300"/>
+          <path d="M52 312 C 150 308, 210 332, 340 312"/>
+        </g>
+
+        <!-- building footprints -->
+        <g class="fade" fill="#17242A">
+          <rect x="228" y="96" width="46" height="30"/>
+          <rect x="286" y="120" width="30" height="46"/>
+          <rect x="232" y="220" width="40" height="26"/>
+        </g>
+
+        <!-- north arrow -->
+        <g class="fade" transform="translate(346,52)">
+          <path d="M0 22 L7 0 L14 22 L7 15 Z" fill="#17242A"/>
+          <text x="7" y="36" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5C6A61">N</text>
+        </g>
+
+        <!-- scale bar -->
+        <g class="fade" transform="translate(52,404)">
+          <rect x="0" y="0" width="20" height="6" fill="#17242A"/>
+          <rect x="20" y="0" width="20" height="6" fill="none" stroke="#17242A" stroke-width="1"/>
+          <rect x="40" y="0" width="20" height="6" fill="#17242A"/>
+          <text x="0" y="20" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5C6A61">0</text>
+          <text x="60" y="20" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5C6A61">50m</text>
+        </g>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ============================ ABOUT ============================ -->
+  <!-- EDIT #6 — your about text -->
+  <section id="about" class="section">
+    <div class="section-head">
+      <span class="label">A / About</span>
+      <h2>Between the drawing and the decision.</h2>
+    </div>
+    <div class="prose">
+      <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
+      <p>Alongside that, I care about how the planning profession handles change, particularly the responsible use of data and new technology in decisions that shape the public realm. Good planning is patient, transparent, and accountable, and I try to bring that same posture to the tools we adopt.</p>
+    </div>
+  </section>
+
+  <!-- ============================ FOCUS ============================ -->
+  <!-- EDIT #7 — your three focus areas -->
+  <section id="focus" class="section">
+    <div class="section-head">
+      <span class="label">B / Focus</span>
+      <h2>Three things I work on.</h2>
+    </div>
+    <div class="grid-3">
+      <div class="cell">
+        <span class="tag">Policy</span>
+        <h3>Development plans</h3>
+        <p>Drafting and reviewing statutory spatial policy, from the evidence base through to the objectives that guide how land is used.</p>
+      </div>
+      <div class="cell">
+        <span class="tag">Data</span>
+        <h3>Planning &amp; governance</h3>
+        <p>How planning authorities can use data and emerging technology transparently, and within the rules that protect the people affected.</p>
+      </div>
+      <div class="cell">
+        <span class="tag">Practice</span>
+        <h3>Profession &amp; education</h3>
+        <p>Supporting standards and continuing education across the planning profession, so practice keeps pace with the questions it faces.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ WRITING ============================ -->
+  <!-- EDIT #8 — replace with real posts/links, or delete this section.
+       Each row: date · title · type. Point href at your article. -->
+  <section id="writing" class="section">
+    <div class="section-head">
+      <span class="label">C / Writing</span>
+      <h2>Notes &amp; writing.</h2>
+    </div>
+    <div class="schedule">
+      <a class="row" href="#">
+        <span class="row-date">2026 · 03</span>
+        <span class="row-title">On evidence-led development plans</span>
+        <span class="row-kind">Essay</span>
+      </a>
+      <a class="row" href="#">
+        <span class="row-date">2026 · 01</span>
+        <span class="row-title">Technology in the planning system: a cautious case</span>
+        <span class="row-kind">Article</span>
+      </a>
+      <a class="row" href="#">
+        <span class="row-date">2025 · 11</span>
+        <span class="row-title">What a good public consultation actually asks</span>
+        <span class="row-kind">Note</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================ CONTACT ============================ -->
+  <!-- EDIT #9 — your real email and links -->
+  <section id="contact" class="section">
+    <div class="section-head">
+      <span class="label">D / Contact</span>
+      <h2>Get in touch.</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="prose">
+        <p>Open to conversations about planning practice, spatial policy, and the sensible use of technology in the public sector. The quickest way to reach me is by email.</p>
+      </div>
+      <ul class="channels">
+        <li><a href="mailto:you@example.com"><span class="k">Email</span><span>you@example.com</span></a></li>
+        <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/your-handle</span></a></li>
+        <li><a href="#"><span class="k">Location</span><span>Dublin, Ireland</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ FOOTER ============================ -->
+  <!-- EDIT #10 — title block: your name, role, location -->
+  <footer>
+    <div class="titleblock">
+      <div class="tb-name">
+        <span class="tb-k">Name</span>
+        <span class="tb-v">Dean Brickland</span>
+      </div>
+      <div>
+        <span class="tb-k">Role</span>
+        <span class="tb-v" style="font-size:1rem">Spatial Planner</span>
+      </div>
+      <div>
+        <span class="tb-k">Location</span>
+        <span class="tb-v" style="font-size:1rem">Dublin, IE</span>
+      </div>
+      <div style="grid-column:1 / -1; border-top:1px solid var(--line); border-right:0;">
+        <span class="tb-sub">Drawn with care · Revised <span id="rev">Mar 2026</span> · © <span id="yr">2026</span></span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Fills the current year in the footer. Harmless if it fails.
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
