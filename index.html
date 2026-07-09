@@ -154,7 +154,7 @@
   .btn-ghost:hover{ background:transparent; color:var(--land-deep); text-decoration-color:var(--land); }
 
   /* The plan drawing */
-  .plan{ width:100%; height:auto; display:block; }
+  .plan{ width:100%; height:auto; display:block; border:1px solid var(--line); }
 
   /* =============================================================
      SECTIONS
@@ -286,68 +286,9 @@
       </div>
     </div>
 
-    <!-- SIGNATURE: an abstract site plan. Decorative-but-thematic. -->
-    <div class="plan-wrap" aria-hidden="true">
-      <svg class="plan" viewBox="0 0 400 440" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#536A3C" stroke-width="1.1" opacity="0.55"/>
-          </pattern>
-        </defs>
-
-        <!-- sheet frame -->
-        <rect x="4" y="4" width="392" height="432" stroke="#C6CEC1" stroke-width="1"/>
-        <rect x="16" y="16" width="368" height="408" stroke="#C6CEC1" stroke-width="1"/>
-
-        <!-- edge tick marks -->
-        <g stroke="#C6CEC1" stroke-width="1">
-          <line x1="108" y1="16" x2="108" y2="26"/><line x1="200" y1="16" x2="200" y2="26"/><line x1="292" y1="16" x2="292" y2="26"/>
-          <line x1="16" y1="130" x2="26" y2="130"/><line x1="16" y1="224" x2="26" y2="224"/><line x1="16" y1="318" x2="26" y2="318"/>
-        </g>
-
-        <!-- site boundary (red-line convention, drawn dashed) -->
-        <path class="draw" d="M60 70 L330 58 L344 250 L300 380 L96 372 L52 210 Z"
-              stroke="#17242A" stroke-width="1.6" stroke-dasharray="7 5"/>
-
-        <!-- open-space parcel, hatched green -->
-        <path class="fade" d="M60 70 L188 64 L196 196 L64 204 Z" fill="url(#hatch)"/>
-        <path class="draw d2" d="M60 70 L188 64 L196 196 L64 204 Z" stroke="#43592F" stroke-width="1.2"/>
-
-        <!-- internal subdivision lines -->
-        <g class="draw d2" stroke="#17242A" stroke-width="1">
-          <path d="M196 196 L200 62"/>
-          <path d="M196 196 L340 190"/>
-          <path d="M196 196 L200 372"/>
-        </g>
-
-        <!-- road / access curve, double line -->
-        <g class="draw d3" stroke="#17242A" stroke-width="1.1" fill="none">
-          <path d="M52 300 C 150 296, 210 320, 340 300"/>
-          <path d="M52 312 C 150 308, 210 332, 340 312"/>
-        </g>
-
-        <!-- building footprints -->
-        <g class="fade" fill="#17242A">
-          <rect x="228" y="96" width="46" height="30"/>
-          <rect x="286" y="120" width="30" height="46"/>
-          <rect x="232" y="220" width="40" height="26"/>
-        </g>
-
-        <!-- north arrow -->
-        <g class="fade" transform="translate(346,52)">
-          <path d="M0 22 L7 0 L14 22 L7 15 Z" fill="#17242A"/>
-          <text x="7" y="36" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5C6A61">N</text>
-        </g>
-
-        <!-- scale bar -->
-        <g class="fade" transform="translate(52,404)">
-          <rect x="0" y="0" width="20" height="6" fill="#17242A"/>
-          <rect x="20" y="0" width="20" height="6" fill="none" stroke="#17242A" stroke-width="1"/>
-          <rect x="40" y="0" width="20" height="6" fill="#17242A"/>
-          <text x="0" y="20" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5C6A61">0</text>
-          <text x="60" y="20" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5C6A61">50m</text>
-        </g>
-      </svg>
+    <!-- Site plan image. To swap it later, upload a new file with the same name. -->
+    <div class="plan-wrap">
+      <img class="plan" src="site-plan.webp" alt="Illustrative site master plan drawing" width="1200" height="1321">
     </div>
   </header>
 
@@ -429,8 +370,8 @@
         <p>Open to conversations about planning practice, spatial policy, and the sensible use of technology in the public sector. The quickest way to reach me is by email.</p>
       </div>
       <ul class="channels">
-        <li><a href="mailto:you@example.com"><span class="k">Email</span><span>you@example.com</span></a></li>
-        <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/your-handle</span></a></li>
+        <li><a href="mailto:dean@deanbrickland.com"><span class="k">Email</span><span>dean@deanbrickland.com</span></a></li>
+        <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
         <li><a href="#"><span class="k">Location</span><span>Dublin, Ireland</span></a></li>
       </ul>
     </div>
@@ -453,7 +394,7 @@
         <span class="tb-v" style="font-size:1rem">Dublin, IE</span>
       </div>
       <div style="grid-column:1 / -1; border-top:1px solid var(--line); border-right:0;">
-        <span class="tb-sub">Drawn with care · Revised <span id="rev">Mar 2026</span> · © <span id="yr">2026</span></span>
+        <span class="tb-sub">© <span id="yr">2026</span></span>
       </div>
     </div>
   </footer>
