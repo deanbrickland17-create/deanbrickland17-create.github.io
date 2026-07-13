@@ -69,395 +69,483 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Spectral:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   /* =============================================================
-     DESIGN TOKENS
-     Palette: drafting ink + ordnance-map green on vellum paper.
+     DESIGN TOKENS — deep pine, cream, lime accent
      ============================================================= */
   :root{
-    --paper:    #EFF1EC;   /* cool drafting paper (not warm cream)   */
-    --paper-2:  #E6E9E1;   /* faint panel for alternating band       */
-    --ink:      #17242A;   /* drafting-ink near-black slate-teal      */
-    --land:     #536A3C;   /* muted ordnance green — the one accent   */
-    --land-deep:#43592F;   /* darker green for link text (contrast)   */
-    --slate:    #5C6A61;   /* secondary text, captions, labels        */
-    --line:     #C6CEC1;   /* grid + hairline dividers                */
-
-    --wrap: 1120px;
-    --pad: clamp(1.25rem, 5vw, 4rem);
-
-    --mono: "IBM Plex Mono", ui-monospace, monospace;
-    --disp: "Archivo", system-ui, sans-serif;
-    --body: "Spectral", Georgia, serif;
+    --pine:#1D362C;        /* main dark ground */
+    --pine-deep:#162B23;   /* nav / footer strip */
+    --pine-card:#244235;   /* raised card on dark */
+    --sage:#A3B7A9;        /* muted text on dark */
+    --sage-img:#63795F;    /* tint ground behind card images */
+    --cream:#EFEDE2;       /* light ground */
+    --cream-line:#DDD9C8;  /* hairlines on light */
+    --lime:#CDF06B;        /* accent */
+    --ink:#20302A;         /* text on cream */
+    --ink-fade:#AFB2A2;    /* faded statement text */
+    --radius:18px;
+    --radius-pill:999px;
   }
 
-  *,*::before,*::after{ box-sizing:border-box; }
-
+  *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; }
 
   body{
-    margin:0;
-    font-family:var(--body);
-    font-size:1.075rem;
-    line-height:1.62;
+    font-family:"Archivo",system-ui,sans-serif;
+    background:var(--cream);
     color:var(--ink);
-    background-color:var(--paper);
-    /* graph-paper underlay: fine grid + heavier survey grid */
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px),
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size:
-      140px 140px, 140px 140px,   /* major lines */
-      28px 28px, 28px 28px;        /* minor lines */
-    background-position:0 0;
+    line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
-  /* Soften the grid so it reads as a whisper, not a table */
-  body::before{
-    content:"";
-    position:fixed; inset:0;
-    background:var(--paper);
-    opacity:.78;
-    z-index:-1;
-    pointer-events:none;
-  }
 
-  .wrap{ max-width:var(--wrap); margin-inline:auto; padding-inline:var(--pad); }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
 
-  a{ color:var(--land-deep); text-decoration-thickness:1px; text-underline-offset:3px; }
-  a:hover{ color:var(--ink); }
-
-  /* Shared label / eyebrow style — the "annotation" voice */
-  .label{
-    font-family:var(--mono);
-    font-size:.72rem;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--slate);
-  }
-
-  :focus-visible{
-    outline:2.5px solid var(--land);
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--lime);
     outline-offset:3px;
-    border-radius:1px;
+    border-radius:4px;
+  }
+
+  .wrap{ max-width:1160px; margin-inline:auto; padding-inline:clamp(1.25rem,4vw,2.5rem); }
+
+  /* Small mono labels and pill tags */
+  .mono{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .pill{
+    display:inline-flex; align-items:center;
+    padding:.3rem .8rem;
+    border-radius:var(--radius-pill);
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.7rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    white-space:nowrap;
   }
 
   /* =============================================================
-     NAV
+     DARK HALF — nav, hero, focus cards
      ============================================================= */
+  .dark{ background:var(--pine); color:var(--cream); }
+
+  /* NAV */
   .nav{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:1rem; flex-wrap:wrap;
+    display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
     padding-block:1.4rem;
-    border-bottom:1px solid var(--line);
   }
-  .brand{
-    font-family:var(--mono); font-weight:500;
-    font-size:.82rem; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink); text-decoration:none;
-    display:inline-flex; align-items:center; gap:.55rem;
+  .brand{ display:flex; align-items:center; gap:.7rem; font-weight:600; font-size:1rem; }
+  .brand-chip{
+    background:var(--cream);
+    border-radius:8px;
+    padding:4px;
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
   }
-  .brand .tick{ width:12px; height:12px; border:1.5px solid var(--land); display:inline-block; }
-  .brand-logo{ height:24px; width:auto; display:block; }
-  .nav ul{ display:flex; gap:1.4rem; list-style:none; margin:0; padding:0; flex-wrap:wrap; }
-  .nav a{
-    font-family:var(--mono); font-size:.72rem; letter-spacing:.14em;
-    text-transform:uppercase; text-decoration:none; color:var(--slate);
+  .brand-chip img{ width:100%; height:100%; object-fit:contain; }
+  .brand .dot{ color:var(--lime); }
+  .nav ul{ display:flex; gap:2rem; list-style:none; }
+  .nav ul a{ font-size:.88rem; color:var(--sage); transition:color .15s ease; }
+  .nav ul a:hover{ color:var(--cream); }
+  .nav .cta{ font-size:.88rem; color:var(--cream); border-bottom:1px solid var(--lime); padding-bottom:2px; }
+
+  /* HERO */
+  .hero{ padding-block:clamp(3rem,8vw,6rem) clamp(2.5rem,6vw,4rem); }
+  .hero h1{
+    font-size:clamp(2.4rem,6vw,4.2rem);
+    font-weight:600;
+    line-height:1.08;
+    letter-spacing:-.02em;
+    text-wrap:balance;
+    max-width:16ch;
   }
-  .nav a:hover{ color:var(--ink); }
+  .hero h1 em{ font-style:normal; color:var(--lime); }
+  .hero-actions{ display:flex; align-items:center; gap:.8rem; margin-top:2.2rem; }
+  .btn{
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:var(--lime); color:var(--pine-deep);
+    font-weight:600; font-size:.9rem;
+    padding:.8rem 1.6rem;
+    border-radius:var(--radius-pill);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
+  .btn-plus{
+    width:44px; height:44px;
+    border-radius:50%;
+    background:var(--lime); color:var(--pine-deep);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1.3rem; font-weight:500; line-height:1;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .btn-plus:hover{ transform:translateY(-1px); filter:brightness(1.05); }
+  .hero-lede{
+    margin-top:2.8rem;
+    max-width:36ch;
+    margin-left:auto;
+    font-size:.92rem;
+    color:var(--sage);
+  }
+
+  /* FOCUS — featured-style card row */
+  .focus-head{
+    display:flex; align-items:center; gap:.6rem;
+    color:var(--sage);
+    padding-block:1rem 1.4rem;
+    border-top:1px solid rgba(239,237,226,.12);
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.4rem;
+    padding-bottom:clamp(3rem,7vw,5rem);
+  }
+  .card-top{
+    display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+    margin-bottom:.8rem;
+  }
+  .card-top h3{ font-size:.95rem; font-weight:600; }
+  .card-top .pill{ background:rgba(239,237,226,.1); color:var(--sage); }
+  .card-img{
+    background:var(--sage-img);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .card-img img{
+    width:100%; height:300px;
+    object-fit:cover;
+    mix-blend-mode:multiply;
+    filter:grayscale(1) contrast(.92) brightness(1.06);
+    opacity:.92;
+  }
+  .card p{ margin-top:1rem; font-size:.9rem; color:var(--sage); }
 
   /* =============================================================
-     HERO — the drawing sheet opens with a plan
+     LIGHT HALF — statement, stats, writing, contact
      ============================================================= */
-  .hero{
-    display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:clamp(1.5rem,4vw,3.5rem);
-    align-items:center;
-    padding-block:clamp(3rem,8vw,6.5rem);
-    border-bottom:1px solid var(--line);
+  .light{ background:var(--cream); color:var(--ink); }
+
+  .section{ padding-block:clamp(3rem,8vw,5.5rem); }
+
+  .label-pill{
+    background:var(--pine); color:var(--lime);
+    display:inline-flex;
+    padding:.35rem .9rem;
+    border-radius:var(--radius-pill);
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
+    margin-bottom:1.6rem;
   }
-  .hero-coord{ display:block; margin-bottom:1.4rem; }
-  .hero h1{
-    font-family:var(--disp);
-    font-weight:800;
-    font-size:clamp(2.5rem, 6.4vw, 5rem);
-    line-height:1.02;
-    letter-spacing:-.02em;
-    margin:0 0 1.5rem;
+
+  /* Statement (About) */
+  .statement h2{
+    font-size:clamp(1.7rem,3.6vw,2.6rem);
+    font-weight:600;
+    letter-spacing:-.015em;
+    line-height:1.15;
+    max-width:24ch;
     text-wrap:balance;
   }
-  .hero h1 em{ font-style:normal; color:var(--land); }
-  .hero-lede{
-    font-size:clamp(1.1rem,1.6vw,1.3rem);
-    max-width:34ch;
-    margin:0 0 2rem;
-    color:#2c3a38;
+  .statement .prose{ margin-top:1.8rem; max-width:60ch; }
+  .statement .prose p{
+    font-size:clamp(1.1rem,2vw,1.4rem);
+    line-height:1.4;
+    color:var(--ink-fade);
+    font-weight:500;
   }
-  .hero-actions{ display:flex; gap:.75rem 1.5rem; flex-wrap:wrap; align-items:center; }
-  .btn{
-    font-family:var(--mono); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase;
-    text-decoration:none; color:var(--paper); background:var(--ink);
-    padding:.85rem 1.4rem; display:inline-block; transition:background .18s ease;
-  }
-  .btn:hover{ background:var(--land-deep); color:var(--paper); }
-  .btn-ghost{
-    color:var(--ink); background:transparent; padding:.85rem 0;
-    text-decoration:underline; text-decoration-color:var(--line);
-  }
-  .btn-ghost:hover{ background:transparent; color:var(--land-deep); text-decoration-color:var(--land); }
+  .statement .prose p + p{ margin-top:1.2rem; }
 
-  /* The plan drawing */
-  .plan{ width:100%; height:auto; display:block; border:1px solid var(--line); }
-
-  /* =============================================================
-     SECTIONS
-     ============================================================= */
-  .section{ padding-block:clamp(3rem,7vw,5.5rem); border-bottom:1px solid var(--line); }
-  .section-head{ display:flex; align-items:baseline; gap:1rem; margin-bottom:2.2rem; }
-  .section-head .label{ padding-top:.4rem; white-space:nowrap; }
-  .section h2{
-    font-family:var(--disp); font-weight:700;
-    font-size:clamp(1.55rem,3.4vw,2.35rem);
-    line-height:1.1; letter-spacing:-.01em; margin:0;
+  /* Stats band */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.4rem;
+    margin-top:3rem;
   }
-  .prose{ max-width:60ch; }
-  .prose p{ margin:0 0 1.15rem; }
-  .prose p:last-child{ margin-bottom:0; }
-
-  /* Focus areas — three domains, tagged not numbered */
-  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
-  .cell{ background:var(--paper); padding:1.75rem 1.5rem; }
-  .cell .tag{
-    font-family:var(--mono); font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--land); border:1px solid var(--land); padding:.15rem .5rem; display:inline-block; margin-bottom:1rem;
+  .stat{
+    background:var(--pine);
+    border-radius:var(--radius);
+    padding:2.4rem 1.6rem 2rem;
+    text-align:center;
   }
-  .cell h3{ font-family:var(--disp); font-weight:700; font-size:1.15rem; margin:0 0 .6rem; letter-spacing:-.01em; }
-  .cell p{ margin:0; font-size:.98rem; color:#33403d; }
+  .stat .big{
+    color:var(--lime);
+    font-size:clamp(1.9rem,3.5vw,2.6rem);
+    font-weight:600;
+    letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .cap{
+    display:block;
+    margin-top:1.2rem;
+    color:var(--sage);
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
+  }
 
-  /* Writing — a revision schedule of entries */
-  .schedule{ border-top:1px solid var(--ink); }
+  /* Writing */
+  .writing h2{
+    font-size:clamp(1.6rem,3vw,2.2rem);
+    font-weight:600; letter-spacing:-.015em;
+    margin-bottom:2rem;
+  }
   .row{
-    display:grid; grid-template-columns:auto 1fr auto; gap:1rem 1.5rem; align-items:baseline;
-    padding:1.15rem 0; border-bottom:1px solid var(--line); text-decoration:none; color:var(--ink);
+    display:grid;
+    grid-template-columns:110px 1fr auto;
+    align-items:baseline; gap:1.2rem;
+    padding-block:1.1rem;
+    border-top:1px solid var(--cream-line);
+    transition:background .15s ease;
   }
-  .row:hover{ color:var(--land-deep); }
-  .row:hover .row-title{ text-decoration:underline; text-underline-offset:3px; }
-  .row-date{ font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; color:var(--slate); }
-  .row-title{ font-family:var(--disp); font-weight:600; font-size:1.05rem; }
-  .row-kind{ font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--slate); }
+  .row:last-of-type{ border-bottom:1px solid var(--cream-line); }
+  .row:hover{ background:rgba(29,54,44,.04); }
+  .row-date{ font-family:"IBM Plex Mono",monospace; font-size:.75rem; color:#8A8D7E; }
+  .row-title{ font-weight:500; }
+  .row-kind{ background:var(--pine); color:var(--cream); }
 
-  /* Contact */
-  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
-  .contact-grid .prose{ align-self:center; }
-  .channels{ list-style:none; margin:0; padding:0; border-top:1px solid var(--ink); }
-  .channels li{ border-bottom:1px solid var(--line); }
+  /* Contact panel */
+  .contact-panel{
+    background:var(--pine);
+    color:var(--cream);
+    border-radius:calc(var(--radius) + 8px);
+    padding:clamp(2.2rem,5vw,3.5rem);
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:2.5rem;
+    align-items:start;
+  }
+  .contact-panel h2{
+    font-size:clamp(1.7rem,3.4vw,2.4rem);
+    font-weight:600; letter-spacing:-.015em;
+    margin-bottom:1.2rem;
+  }
+  .contact-panel .intro{ color:var(--sage); font-size:.95rem; max-width:44ch; }
+  .channels{ list-style:none; display:flex; flex-direction:column; gap:.8rem; }
   .channels a{
-    display:flex; justify-content:space-between; gap:1rem; padding:1rem 0; text-decoration:none; color:var(--ink);
-    font-family:var(--mono); font-size:.85rem; letter-spacing:.04em;
+    display:flex; justify-content:space-between; gap:1rem;
+    padding:.9rem 1.2rem;
+    background:var(--pine-card);
+    border-radius:12px;
+    font-size:.9rem;
+    transition:background .15s ease;
   }
-  .channels a:hover{ color:var(--land-deep); }
-  .channels .k{ color:var(--slate); text-transform:uppercase; font-size:.7rem; letter-spacing:.16em; }
+  .channels a:hover{ background:#2B4C3E; }
+  .channels .k{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--sage);
+    align-self:center;
+  }
+  .channels .email-pill{
+    background:var(--lime); color:var(--pine-deep); font-weight:600;
+  }
+  .channels .email-pill:hover{ background:var(--lime); filter:brightness(1.05); }
+  .channels .email-pill .k{ color:var(--pine-deep); opacity:.7; }
+
+  /* Footer */
+  footer{
+    background:var(--pine-deep); color:var(--sage);
+    margin-top:clamp(3rem,7vw,5rem);
+  }
+  .foot{
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem;
+    padding-block:1.6rem;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
+  }
+  .foot .name{ color:var(--cream); }
 
   /* =============================================================
-     FOOTER — drawing title block
+     RESPONSIVE + MOTION
      ============================================================= */
-  footer{ padding-block:clamp(2.5rem,6vw,4rem); }
-  .titleblock{ border:1.5px solid var(--ink); display:grid; grid-template-columns:2fr 1fr 1fr; }
-  .titleblock > div{ border-right:1px solid var(--line); padding:1rem 1.15rem; }
-  .titleblock > div:last-child{ border-right:0; }
-  .tb-name{ grid-column:1 / -1; border-right:0; border-bottom:1px solid var(--ink); }
-  .tb-k{ font-family:var(--mono); font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); display:block; margin-bottom:.35rem; }
-  .tb-v{ font-family:var(--disp); font-weight:700; font-size:1.05rem; letter-spacing:-.01em; }
-  .titleblock .tb-name .tb-v{ font-size:1.4rem; }
-  .tb-sub{ font-family:var(--mono); font-size:.78rem; color:var(--slate); }
-
-  /* =============================================================
-     MOTION — a plan being drawn, disabled if reduced motion
-     ============================================================= */
-  @media (prefers-reduced-motion: no-preference){
-    .draw{ stroke-dasharray:2400; stroke-dashoffset:2400; animation:draw 2.2s ease forwards; }
-    .draw.d2{ animation-delay:.35s; }
-    .draw.d3{ animation-delay:.7s; }
-    .fade{ opacity:0; animation:fade .9s ease 1.5s forwards; }
-    .rise{ opacity:0; transform:translateY(14px); animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
-    .r2{ animation-delay:.08s; } .r3{ animation-delay:.16s; } .r4{ animation-delay:.24s; }
+  @media (max-width:840px){
+    .cards, .stats{ grid-template-columns:1fr; }
+    .card-img img{ height:230px; }
+    .contact-panel{ grid-template-columns:1fr; }
+    .hero-lede{ margin-left:0; }
+    .nav ul{ display:none; }
   }
-  @keyframes draw{ to{ stroke-dashoffset:0; } }
-  @keyframes fade{ to{ opacity:1; } }
-  @keyframes rise{ to{ opacity:1; transform:none; } }
-
-  /* =============================================================
-     RESPONSIVE
-     ============================================================= */
-  @media (max-width: 860px){
-    .hero{ grid-template-columns:1fr; }
-    .plan-wrap{ order:2; max-width:420px; }
-    .grid-3{ grid-template-columns:1fr; }
-    .contact-grid{ grid-template-columns:1fr; gap:2rem; }
-    .titleblock{ grid-template-columns:1fr 1fr; }
-    .tb-name{ grid-column:1 / -1; }
+  @media (max-width:560px){
+    .row{ grid-template-columns:1fr; gap:.3rem; }
+    .row-kind{ justify-self:start; }
   }
-  @media (max-width: 520px){
-    .section-head{ flex-direction:column; gap:.5rem; }
-    .row{ grid-template-columns:1fr auto; }
-    .row-date{ grid-column:1 / -1; }
-    .nav ul{ gap:1rem; }
+
+  .rise{ animation:rise .7s ease both; }
+  .r2{ animation-delay:.12s; }
+  .r3{ animation-delay:.24s; }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:none; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    .rise{ animation:none; }
+    *{ transition:none !important; }
   }
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
-  <!-- ============================ NAV ============================ -->
-  <!-- EDIT #2 — your name / initials in the brand, below -->
-  <nav class="nav">
-    <a class="brand" href="#top"><img class="brand-logo" src="logo.png" alt=""> Dean P. Brickland MIPI</a>
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#focus">Focus</a></li>
-      <li><a href="#writing">Writing</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+<!-- ============================ DARK HALF ============================ -->
+<div class="dark" id="top">
+  <div class="wrap">
 
-  <!-- ============================ HERO ============================ -->
-  <header id="top" class="hero">
-    <div>
-      <!-- EDIT #3 — coordinate line: your location / role tag -->
-      <span class="label hero-coord fade">Town Planner</span>
+    <!-- EDIT #2 — your name / initials in the brand, below -->
+    <nav class="nav">
+      <a class="brand" href="#top">
+        <span class="brand-chip"><img src="logo.png" alt=""></span>
+        dean<span class="dot">.</span>brickland
+      </a>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#focus">Focus</a></li>
+        <li><a href="#writing">Writing</a></li>
+      </ul>
+      <a class="cta" href="#contact">&nearr; Get in touch</a>
+    </nav>
 
-      <!-- EDIT #4 — the headline. The word in green gets the accent. -->
+    <!-- ============================ HERO ============================ -->
+    <header class="hero">
+      <!-- EDIT #3 — the headline. The word in green gets the accent. -->
       <h1 class="rise">Shaping how places grow, where policy, community and <em>technology</em> meet.</h1>
 
-      <!-- EDIT #5 — one or two sentences about you -->
-      <p class="hero-lede rise r2">I'm a town planner working in Irish local government and professional practice, with a focus on how planning systems adopt new tools responsibly.</p>
-
-      <div class="hero-actions rise r3">
+      <div class="hero-actions rise r2">
         <a class="btn" href="#contact">Get in touch</a>
-        <a class="btn btn-ghost" href="#writing">Read my writing</a>
+        <a class="btn-plus" href="#focus" aria-label="See my focus areas">+</a>
       </div>
-    </div>
 
-    <!-- Site plan image. To swap it later, upload a new file with the same name. -->
-    <div class="plan-wrap">
-      <img class="plan" src="site-plan.webp" alt="Illustrative site master plan" width="1200" height="1321">
-    </div>
-  </header>
+      <!-- EDIT #4 — one or two sentences about you -->
+      <p class="hero-lede rise r3">I'm a town planner working in Irish local government and professional practice, with a focus on how planning systems adopt new tools responsibly.</p>
+    </header>
 
-  <!-- ============================ ABOUT ============================ -->
-  <!-- EDIT #6 — your about text -->
-  <section id="about" class="section">
-    <div class="section-head">
-      <span class="label">A / About</span>
-      <h2>Between the plan and the decision.</h2>
-    </div>
-    <div class="prose">
-      <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
-      <p>Alongside that, I care about how the planning profession handles change, particularly the responsible use of data and new technology in decisions that shape the public realm. Good planning is patient, transparent, and accountable, and I try to bring that same posture to the tools we adopt.</p>
-    </div>
-  </section>
+    <!-- ============================ FOCUS ============================ -->
+    <!-- EDIT #5 — your three focus areas -->
+    <section id="focus">
+      <div class="focus-head">
+        <span class="mono">&#8982; Focus</span>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-top">
+            <h3>Development plans</h3>
+            <span class="pill">Policy</span>
+          </div>
+          <div class="card-img"><img src="card-plan-1.webp" alt="Illustrative site plan detail — phased landscaping zone" loading="lazy"></div>
+          <p>Drafting and reviewing statutory spatial policy, from the evidence base through to the objectives that guide how land is used.</p>
+        </div>
+        <div class="card">
+          <div class="card-top">
+            <h3>Planning &amp; governance</h3>
+            <span class="pill">Data</span>
+          </div>
+          <div class="card-img"><img src="card-plan-2.webp" alt="Illustrative site plan detail — office block layout" loading="lazy"></div>
+          <p>How planning authorities can use data and emerging technology transparently, and within the rules that protect the people affected.</p>
+        </div>
+        <div class="card">
+          <div class="card-top">
+            <h3>Profession &amp; education</h3>
+            <span class="pill">Practice</span>
+          </div>
+          <div class="card-img"><img src="card-plan-3.webp" alt="Illustrative site plan detail — logistics building and access road" loading="lazy"></div>
+          <p>Supporting standards and continuing education across the planning profession, so practice keeps pace with the questions it faces.</p>
+        </div>
+      </div>
+    </section>
 
-  <!-- ============================ FOCUS ============================ -->
-  <!-- EDIT #7 — your three focus areas -->
-  <section id="focus" class="section">
-    <div class="section-head">
-      <span class="label">B / Focus</span>
-      <h2>Three things I work on.</h2>
-    </div>
-    <div class="grid-3">
-      <div class="cell">
-        <span class="tag">Policy</span>
-        <h3>Development plans</h3>
-        <p>Drafting and reviewing statutory spatial policy, from the evidence base through to the objectives that guide how land is used.</p>
-      </div>
-      <div class="cell">
-        <span class="tag">Data</span>
-        <h3>Planning &amp; governance</h3>
-        <p>How planning authorities can use data and emerging technology transparently, and within the rules that protect the people affected.</p>
-      </div>
-      <div class="cell">
-        <span class="tag">Practice</span>
-        <h3>Profession &amp; education</h3>
-        <p>Supporting standards and continuing education across the planning profession, so practice keeps pace with the questions it faces.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================ WRITING ============================ -->
-  <!-- EDIT #8 — replace with real posts/links, or delete this section.
-       Each row: date · title · type. Point href at your article. -->
-  <section id="writing" class="section">
-    <div class="section-head">
-      <span class="label">C / Writing</span>
-      <h2>Notes &amp; writing.</h2>
-    </div>
-    <div class="schedule">
-      <a class="row" href="#">
-        <span class="row-date">2026 · 03</span>
-        <span class="row-title">On evidence-led development plans</span>
-        <span class="row-kind">Essay</span>
-      </a>
-      <a class="row" href="#">
-        <span class="row-date">2026 · 01</span>
-        <span class="row-title">Technology in the planning system: a cautious case</span>
-        <span class="row-kind">Article</span>
-      </a>
-      <a class="row" href="#">
-        <span class="row-date">2025 · 11</span>
-        <span class="row-title">What a good public consultation actually asks</span>
-        <span class="row-kind">Note</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ============================ CONTACT ============================ -->
-  <!-- EDIT #9 — your real email and links -->
-  <section id="contact" class="section">
-    <div class="section-head">
-      <span class="label">D / Contact</span>
-      <h2>Get in touch.</h2>
-    </div>
-    <div class="contact-grid">
-      <div class="prose">
-        <p>Open to conversations about planning practice, spatial policy, and the sensible use of technology in the public sector. The quickest way to reach me is by email.</p>
-      </div>
-      <ul class="channels">
-        <li><a href="mailto:dean@deanbrickland.com"><span class="k">Email</span><span>dean@deanbrickland.com</span></a></li>
-        <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
-        <li><a href="#"><span class="k">Location</span><span>Dublin, Ireland</span></a></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ============================ FOOTER ============================ -->
-  <!-- EDIT #10 — title block: your name, role, location -->
-  <footer>
-    <div class="titleblock">
-      <div class="tb-name">
-        <span class="tb-k">Name</span>
-        <span class="tb-v">Dean P. Brickland MIPI</span>
-      </div>
-      <div>
-        <span class="tb-k">Role</span>
-        <span class="tb-v" style="font-size:1rem">Town Planner</span>
-      </div>
-      <div>
-        <span class="tb-k">Location</span>
-        <span class="tb-v" style="font-size:1rem">Dublin, IE</span>
-      </div>
-      <div style="grid-column:1 / -1; border-top:1px solid var(--line); border-right:0;">
-        <span class="tb-sub">© <span id="yr">2026</span></span>
-      </div>
-    </div>
-  </footer>
-
+  </div>
 </div>
+
+<!-- ============================ LIGHT HALF ============================ -->
+<div class="light">
+  <div class="wrap">
+
+    <!-- ============================ ABOUT ============================ -->
+    <!-- EDIT #6 — your about text -->
+    <section id="about" class="section statement">
+      <span class="label-pill">A / About</span>
+      <h2>Between the plan and the decision.</h2>
+      <div class="prose">
+        <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
+        <p>Alongside that, I care about how the planning profession handles change, particularly the responsible use of data and new technology in decisions that shape the public realm. Good planning is patient, transparent, and accountable, and I try to bring that same posture to the tools we adopt.</p>
+      </div>
+
+      <!-- EDIT #7 — the three stat cards. Swap in real numbers if you
+           like (e.g. years in practice, plans worked on). -->
+      <div class="stats">
+        <div class="stat">
+          <span class="big">MIPI</span>
+          <span class="cap">Member, Irish Planning Institute</span>
+        </div>
+        <div class="stat">
+          <span class="big">Dublin, IE</span>
+          <span class="cap">Base of practice</span>
+        </div>
+        <div class="stat">
+          <span class="big">3</span>
+          <span class="cap">Focus areas &mdash; policy, data, practice</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ WRITING ============================ -->
+    <!-- EDIT #8 — replace with real posts/links, or delete this section.
+         Each row: date · title · type. Point href at your article. -->
+    <section id="writing" class="section writing">
+      <span class="label-pill">B / Writing</span>
+      <h2>Notes &amp; writing.</h2>
+      <a class="row" href="#">
+        <span class="row-date">2026 &middot; 03</span>
+        <span class="row-title">On evidence-led development plans</span>
+        <span class="pill row-kind">Essay</span>
+      </a>
+      <a class="row" href="#">
+        <span class="row-date">2026 &middot; 01</span>
+        <span class="row-title">Technology in the planning system: a cautious case</span>
+        <span class="pill row-kind">Article</span>
+      </a>
+      <a class="row" href="#">
+        <span class="row-date">2025 &middot; 11</span>
+        <span class="row-title">What a good public consultation actually asks</span>
+        <span class="pill row-kind">Note</span>
+      </a>
+    </section>
+
+    <!-- ============================ CONTACT ============================ -->
+    <!-- EDIT #9 — your real email and links -->
+    <section id="contact" class="section">
+      <div class="contact-panel">
+        <div>
+          <h2>Get in touch.</h2>
+          <p class="intro">Open to conversations about planning practice, spatial policy, and the sensible use of technology in the public sector. The quickest way to reach me is by email.</p>
+        </div>
+        <ul class="channels">
+          <li><a class="email-pill" href="mailto:dean@deanbrickland.com"><span class="k">Email</span><span>dean@deanbrickland.com</span></a></li>
+          <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
+          <li><a href="#top"><span class="k">Location</span><span>Dublin, Ireland</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============================ FOOTER ============================ -->
+<!-- EDIT #10 — your name, role, location -->
+<footer>
+  <div class="wrap foot">
+    <span class="name">Dean P. Brickland MIPI</span>
+    <span>Town Planner</span>
+    <span>Dublin, IE</span>
+    <span>&copy; <span id="yr">2026</span></span>
+  </div>
+</footer>
 
 <script>
   // Fills the current year in the footer. Harmless if it fails.
