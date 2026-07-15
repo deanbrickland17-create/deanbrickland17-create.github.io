@@ -46,7 +46,7 @@
     "honorificSuffix": "MIPI",
     "jobTitle": "Town Planner",
     "url": "https://deanbrickland.com/",
-    "image": "https://deanbrickland.com/logo.png",
+    "image": "https://deanbrickland.com/portrait.webp",
     "email": "mailto:dean@deanbrickland.com",
     "address": {
       "@type": "PostalAddress",
@@ -267,6 +267,20 @@
     font-weight:500;
   }
   .statement .prose p + p{ margin-top:1.2rem; }
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.35fr .65fr;
+    gap:clamp(2rem,5vw,4rem);
+    align-items:center;
+  }
+  .portrait{
+    margin:0;
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--sage-img);
+    box-shadow:0 22px 55px rgba(20,39,32,.18);
+  }
+  .portrait img{ width:100%; height:auto; display:block; }
 
   /* Stats band */
   .stats{
@@ -377,6 +391,9 @@
     .contact-panel{ grid-template-columns:1fr; }
     .hero-lede{ margin-left:0; }
     .nav ul{ display:none; }
+    .about-grid{ grid-template-columns:1fr; gap:2.4rem; }
+    .about-text{ order:1; }
+    .portrait{ order:0; max-width:340px; margin-inline:auto; }
   }
   @media (max-width:560px){
     .row{ grid-template-columns:1fr; gap:.3rem; }
@@ -476,11 +493,18 @@
     <!-- ============================ ABOUT ============================ -->
     <!-- EDIT #6 — your about text -->
     <section id="about" class="section statement">
-      <span class="label-pill">A / About</span>
-      <h2>Between the plan and the decision.</h2>
-      <div class="prose">
-        <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
-        <p>Alongside that, I care about how planning supports local economic development — how regeneration is funded, sequenced, and made to last in the towns that need it most. Good planning is patient, transparent, and accountable, and I try to bring that same posture to the way places are renewed.</p>
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="label-pill">A / About</span>
+          <h2>Between the plan and the decision.</h2>
+          <div class="prose">
+            <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
+            <p>Alongside that, I care about how planning supports local economic development — how regeneration is funded, sequenced, and made to last in the towns that need it most. Good planning is patient, transparent, and accountable, and I try to bring that same posture to the way places are renewed.</p>
+          </div>
+        </div>
+        <figure class="portrait">
+          <img src="portrait.webp" alt="Dean Brickland" width="840" height="1050" loading="lazy">
+        </figure>
       </div>
 
       <!-- EDIT #7 — the three stat cards. Swap in real numbers if you
