@@ -9,75 +9,76 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --pine:#1D362C;
-    --pine-deep:#162B23;
-    --sage:#A3B7A9;
-    --cream:#EFEDE2;
-    --lime:#CDF06B;
+    --fog:#E4E7E5;
+    --ink:#24292C;
+    --ink-soft:#5C666B;
+    --denim-ink:#4C5E6C;
+    --line:#C6CCCA;
+    --helv:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{ height:100%; }
   body{
-    font-family:"Archivo",system-ui,sans-serif;
-    background:var(--pine);
-    color:var(--cream);
+    font-family:var(--helv);
+    background:var(--fog);
+    color:var(--ink);
     display:flex;
     align-items:center;
     justify-content:center;
     padding:1.5rem;
-    line-height:1.5;
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
   a{ color:inherit; }
-  a:focus-visible{ outline:2px solid var(--lime); outline-offset:3px; border-radius:4px; }
+  a:focus-visible{ outline:2px solid var(--denim-ink); outline-offset:3px; }
   .card{ max-width:32rem; text-align:center; }
   .chip{
-    width:44px; height:44px;
-    background:var(--cream);
-    border-radius:8px;
-    padding:6px;
+    width:36px; height:36px;
     margin-inline:auto;
     margin-bottom:2rem;
+    opacity:.8;
+    filter:grayscale(1);
   }
   .chip img{ width:100%; height:100%; object-fit:contain; display:block; }
   .code{
     font-family:"IBM Plex Mono",monospace;
-    font-size:.8rem;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--lime);
-    margin-bottom:1rem;
+    font-size:.68rem;
+    letter-spacing:.14em;
+    text-transform:lowercase;
+    color:var(--ink-soft);
+    margin-bottom:1.2rem;
   }
   h1{
-    font-size:clamp(1.6rem,4vw,2.2rem);
-    font-weight:600;
-    letter-spacing:-.01em;
+    font-size:clamp(1.4rem,3.6vw,1.9rem);
+    font-weight:500;
+    letter-spacing:-.008em;
+    text-transform:lowercase;
     margin-bottom:1rem;
   }
-  p{ color:var(--sage); font-size:.95rem; margin-bottom:2rem; }
+  p{ color:var(--ink-soft); font-size:.9rem; margin-bottom:2rem; }
   .btn{
-    display:inline-flex; align-items:center; gap:.5rem;
-    background:var(--lime); color:var(--pine-deep);
-    font-weight:600; font-size:.9rem;
-    padding:.8rem 1.6rem;
+    display:inline-block;
+    font-size:.8rem; text-transform:lowercase; letter-spacing:.03em;
+    border:1px solid var(--ink);
     border-radius:999px;
+    padding:.55rem 1.3rem;
     text-decoration:none;
-    transition:transform .15s ease, filter .15s ease;
+    transition:background .15s ease, color .15s ease;
   }
-  .btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
+  .btn:hover{ background:var(--ink); color:var(--fog); }
 </style>
 </head>
 <body>
   <div class="card">
     <div class="chip"><img src="logo.png" alt="Dean Brickland"></div>
-    <div class="code">404 / Not found</div>
-    <h1>This page doesn't exist.</h1>
+    <div class="code">404 / not found</div>
+    <h1>this page doesn't exist.</h1>
     <p>The link may be broken, or the page may have moved. Head back to the homepage to find what you're looking for.</p>
-    <a class="btn" href="/">Back to homepage</a>
+    <a class="btn" href="/">back to homepage</a>
   </div>
 </body>
 </html>

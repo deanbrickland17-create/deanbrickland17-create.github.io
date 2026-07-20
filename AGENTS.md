@@ -94,6 +94,11 @@ denim/sage, lowercase Helvetica, blue-cast imagery) exists on
   `prefers-reduced-motion` handling already in place.
 - Any new branch should fork from `draft` (which carries the current
   content/SEO/anti-scraping baseline), not from `main`.
+- **`404.html` has its own inline `<style>` block and does not share
+  `index.html`'s `:root` tokens** (it's a standalone minimal page, kept
+  deliberately small). If you change the active palette/type on a
+  branch, update `404.html` to match by hand — otherwise a broken link
+  drops visitors onto what looks like a different site.
 
 ## Testing expectations
 
