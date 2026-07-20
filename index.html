@@ -47,7 +47,6 @@
     "jobTitle": "Town Planner",
     "url": "https://deanbrickland.com/",
     "image": "https://deanbrickland.com/portrait.webp",
-    "email": "mailto:dean@deanbrickland.com",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Dublin",
@@ -557,7 +556,7 @@
           <p class="intro">Open to conversations about planning practice, spatial policy, and local economic development in the public sector. The quickest way to reach me is by email.</p>
         </div>
         <ul class="channels">
-          <li><a class="email-pill" href="mailto:dean@deanbrickland.com"><span class="k">Email</span><span>dean@deanbrickland.com</span></a></li>
+          <li><a class="email-pill" id="email-link" href="#contact"><span class="k">Email</span><span id="email-text">Show address</span></a></li>
           <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
           <li><a href="#top"><span class="k">Location</span><span>Dublin, Ireland</span></a></li>
         </ul>
@@ -581,6 +580,17 @@
 <script>
   // Fills the current year in the footer. Harmless if it fails.
   document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Assembles the contact email at runtime so the address never appears
+  // in the static HTML that spam harvesters scrape.
+  (function(){
+    var user = 'dean';
+    var host = ['deanbrickland', 'com'].join('.');
+    var addr = user + '@' + host;
+    var link = document.getElementById('email-link');
+    link.href = 'mailto:' + addr;
+    document.getElementById('email-text').textContent = addr;
+  })();
 </script>
 </body>
 </html>
