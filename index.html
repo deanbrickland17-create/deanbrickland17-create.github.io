@@ -374,14 +374,14 @@
   }
   .contact-panel .intro{ color:var(--sage); font-size:.95rem; max-width:44ch; }
   .channels{ list-style:none; display:flex; flex-direction:column; gap:.8rem; }
-  .channels a{
+  .channels a, .channels .static{
     display:flex; justify-content:space-between; gap:1rem;
     padding:.9rem 1.2rem;
     background:var(--pine-card);
     border-radius:12px;
     font-size:.9rem;
-    transition:background .15s ease;
   }
+  .channels a{ transition:background .15s ease; }
   .channels a:hover{ background:#2B4C3E; }
   .channels .k{
     font-family:"IBM Plex Mono",monospace;
@@ -575,7 +575,7 @@
         <ul class="channels">
           <li><a class="email-pill" id="email-link" href="#contact"><span class="k">Email</span><span id="email-text">Show address</span></a></li>
           <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
-          <li><a href="#top"><span class="k">Location</span><span>Dublin, Ireland</span></a></li>
+          <li><div class="static"><span class="k">Location</span><span>Dublin, Ireland</span></div></li>
         </ul>
       </div>
     </section>
