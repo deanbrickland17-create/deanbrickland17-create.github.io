@@ -1,0 +1,19 @@
+name: Check
+
+# This workflow only runs read-only checks against the HTML -- it never
+# builds or deploys anything, and has no effect on GitHub Pages (which
+# deploys from a branch, configured separately under Settings > Pages).
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Run HTML/link checks
+        run: python3 scripts/check.py
