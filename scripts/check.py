@@ -56,6 +56,9 @@ class PageParser(HTMLParser):
         self.has_description = False
         self.lang = None
         self._in_title = False
+        self.main_count = 0
+        self.heading_skips = []  # (line, from_level, to_level)
+        self._max_heading_seen = 0
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -81,6 +84,15 @@ class PageParser(HTMLParser):
         if tag == "title":
             self._in_title = True
 
+        if tag == "main":
+            self.main_count += 1
+
+        if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
+            level = int(tag[1])
+            if level > self._max_heading_seen + 1:
+                self.heading_skips.append((line, self._max_heading_seen, level))
+            self._max_heading_seen = max(self._max_heading_seen, level)
+
     def handle_endtag(self, tag):
         if tag == "title":
             self._in_title = False
@@ -104,6 +116,13 @@ def check_file(path, domains, network, errors, warnings):
         errors.append(f"{rel}: missing <meta name=\"description\">")
     if not parser.lang:
         errors.append(f"{rel}: <html> is missing a lang attribute")
+    if parser.main_count == 0:
+        errors.append(f"{rel}: no <main> landmark -- screen reader users lose a way to jump straight to content")
+    elif parser.main_count > 1:
+        errors.append(f"{rel}: {parser.main_count} <main> elements -- there should be exactly one")
+
+    for line, from_level, to_level in parser.heading_skips:
+        errors.append(f"{rel}:{line}: heading jumps from h{from_level} to h{to_level} with no h{to_level - 1} in between")
 
     for line in parser.imgs_missing_alt:
         errors.append(f"{rel}:{line}: <img> has no alt attribute (use alt=\"\" if decorative)")

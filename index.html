@@ -92,7 +92,7 @@
     --cream-line:#DDD9C8;  /* hairlines on light */
     --lime:#CDF06B;        /* accent */
     --ink:#20302A;         /* text on cream */
-    --ink-fade:#AFB2A2;    /* faded statement text */
+    --ink-fade:#55665A;    /* muted text on cream — WCAG AA (5.2:1) */
     --radius:18px;
     --radius-pill:999px;
   }
@@ -116,6 +116,23 @@
     outline-offset:3px;
     border-radius:4px;
   }
+  /* Lime fails contrast against the cream ground (1.1:1). Links that sit
+     directly on cream (inside .light, e.g. the Writing section) get a
+     dark outline instead; the contact panel is dark pine even though
+     it's nested in .light, so it keeps the lime outline (10:1). */
+  .light a:focus-visible{ outline-color:var(--ink); }
+  .contact-panel a:focus-visible{ outline-color:var(--lime); }
+
+  .skip-link{
+    position:absolute;
+    left:-9999px; top:0;
+    background:var(--lime); color:var(--pine-deep);
+    padding:.85rem 1.4rem;
+    font-weight:600; font-size:.9rem;
+    border-radius:0 0 10px 0;
+    z-index:100;
+  }
+  .skip-link:focus{ left:0; }
 
   .wrap{ max-width:1160px; margin-inline:auto; padding-inline:clamp(1.25rem,4vw,2.5rem); }
 
@@ -201,10 +218,17 @@
 
   /* FOCUS — featured-style card row */
   .focus-head{
-    display:flex; align-items:center; gap:.6rem;
     color:var(--sage);
     padding-block:1rem 1.4rem;
     border-top:1px solid rgba(239,237,226,.12);
+  }
+  .focus-head .mono{ display:flex; align-items:center; gap:.6rem; }
+  .focus-head h2{
+    color:var(--cream);
+    font-size:clamp(1.3rem,2.6vw,1.7rem);
+    font-weight:600;
+    letter-spacing:-.015em;
+    margin-top:.8rem;
   }
   .cards{
     display:grid;
@@ -315,19 +339,22 @@
     font-weight:600; letter-spacing:-.015em;
     margin-bottom:2rem;
   }
-  .row{
-    display:grid;
-    grid-template-columns:110px 1fr auto;
-    align-items:baseline; gap:1.2rem;
-    padding-block:1.1rem;
+  .writing-empty{
     border-top:1px solid var(--cream-line);
-    transition:background .15s ease;
+    border-bottom:1px solid var(--cream-line);
+    padding-block:2rem;
   }
-  .row:last-of-type{ border-bottom:1px solid var(--cream-line); }
-  .row:hover{ background:rgba(29,54,44,.04); }
-  .row-date{ font-family:"IBM Plex Mono",monospace; font-size:.75rem; color:#8A8D7E; }
-  .row-title{ font-weight:500; }
-  .row-kind{ background:var(--pine); color:var(--cream); }
+  .writing-empty p{ color:var(--ink-fade); font-size:1rem; max-width:48ch; }
+  .writing-empty a{
+    display:inline-flex; align-items:center; gap:.4rem;
+    margin-top:1.2rem;
+    font-weight:600; font-size:.9rem;
+    color:var(--ink);
+    border-bottom:1px solid var(--lime);
+    padding-bottom:2px;
+    transition:color .15s ease;
+  }
+  .writing-empty a:hover{ color:var(--sage-img); }
 
   /* Contact panel */
   .contact-panel{
@@ -394,10 +421,6 @@
     .about-text{ order:1; }
     .portrait{ order:0; max-width:340px; margin-inline:auto; }
   }
-  @media (max-width:560px){
-    .row{ grid-template-columns:1fr; gap:.3rem; }
-    .row-kind{ justify-self:start; }
-  }
 
   .rise{ animation:rise .7s ease both; }
   .r2{ animation-delay:.12s; }
@@ -415,6 +438,10 @@
 </head>
 
 <body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<main>
 
 <!-- ============================ DARK HALF ============================ -->
 <div class="dark" id="top">
@@ -435,7 +462,7 @@
     </nav>
 
     <!-- ============================ HERO ============================ -->
-    <header class="hero">
+    <header id="main-content" class="hero" tabindex="-1">
       <!-- EDIT #3 — the headline. The word in green gets the accent. -->
       <h1 class="rise">Shaping how places grow, where policy, community and <em>economy</em> meet.</h1>
 
@@ -453,6 +480,7 @@
     <section id="focus">
       <div class="focus-head">
         <span class="mono">&#8982; Focus</span>
+        <h2>Three things I work on.</h2>
       </div>
       <div class="cards">
         <div class="card">
@@ -530,21 +558,10 @@
     <section id="writing" class="section writing">
       <span class="label-pill">B / Writing</span>
       <h2>Notes &amp; writing.</h2>
-      <a class="row" href="#">
-        <span class="row-date">2026 &middot; 03</span>
-        <span class="row-title">On evidence-led development plans</span>
-        <span class="pill row-kind">Essay</span>
-      </a>
-      <a class="row" href="#">
-        <span class="row-date">2026 &middot; 01</span>
-        <span class="row-title">Regeneration, and what local economies actually need</span>
-        <span class="pill row-kind">Article</span>
-      </a>
-      <a class="row" href="#">
-        <span class="row-date">2025 &middot; 11</span>
-        <span class="row-title">What a good public consultation actually asks</span>
-        <span class="pill row-kind">Note</span>
-      </a>
+      <div class="writing-empty">
+        <p>The first essays are still in progress. In the meantime, the quickest way to keep up is on LinkedIn.</p>
+        <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener">Follow on LinkedIn &rarr;</a>
+      </div>
     </section>
 
     <!-- ============================ CONTACT ============================ -->
@@ -565,6 +582,8 @@
 
   </div>
 </div>
+
+</main>
 
 <!-- ============================ FOOTER ============================ -->
 <!-- EDIT #10 — your name, role, location -->
