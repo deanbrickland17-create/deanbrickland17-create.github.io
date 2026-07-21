@@ -59,7 +59,7 @@ is no staging step and no build to wait on. See
 | `favicon.png` | Browser tab icon |
 | `logo.png` | "DB" monogram mark, used in the nav and 404 page |
 | `portrait.webp` | Headshot, used in the About section |
-| `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image) |
+| `og-image.jpg` | 1200×630 social share card (Open Graph / Twitter Card image) — JPEG here since the Soft Club version's grain texture compresses far better than PNG (51KB vs 590KB); `main`/`draft` use `og-image.png` instead |
 | `card-photo-1.webp`, `card-photo-2.webp`, `card-photo-3.webp` | Cropped station photos used as the three focus-card images (this branch only — `main`/`draft` use `card-plan-*.webp` crops of a site-plan drawing instead) |
 
 The page also carries `Person`/`ProfilePage` JSON-LD structured data
