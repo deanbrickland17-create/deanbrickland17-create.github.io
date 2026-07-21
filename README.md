@@ -60,8 +60,7 @@ is no staging step and no build to wait on. See
 | `logo.png` | "DB" monogram mark, used in the nav and 404 page |
 | `portrait.webp` | Headshot, used in the About section |
 | `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image) |
-| `card-plan-1.webp`, `card-plan-2.webp`, `card-plan-3.webp` | Cropped details used as the three focus-card images |
-| `site-plan.webp` | Source drawing the `card-plan-*` crops were cut from — kept in case new crops are needed |
+| `card-photo-1.webp`, `card-photo-2.webp`, `card-photo-3.webp` | Cropped station photos used as the three focus-card images (this branch only — `main`/`draft` use `card-plan-*.webp` crops of a site-plan drawing instead) |
 
 The page also carries `Person`/`ProfilePage` JSON-LD structured data
 and Open Graph/Twitter Card meta tags for search and social previews
