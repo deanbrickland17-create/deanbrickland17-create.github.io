@@ -5,10 +5,15 @@ Irish Planning Institute. Single-page static site, no build step.
 
 ## Status
 
-The site is currently **unpublished** (GitHub Pages Source is set to
-`None` under Settings → Pages) while it's under revision. `main` is
-the published branch — see [Branches](#branches) below before pushing
-anything to it.
+**`main`'s `index.html` is currently a placeholder holding page**
+("New site coming soon", pine-styled), not the real site. This is
+intentional: the site is public/publishable, but the full build isn't
+shown yet. The actual, finished site lives on `draft` (and the
+alternate visual direction on `style-softclub`) — don't mistake the
+placeholder for a regression or lost work when reading `main`.
+`main` is whatever branch GitHub Pages is configured to deploy from
+(Settings → Pages) — treat any push to it as an instruction to change
+what's publicly live right now, not routine development.
 
 ## Stack
 

@@ -3,613 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- ============================================================= -->
-<!--  EDIT #1 — Browser tab title and description                  -->
-<!-- ============================================================= -->
 <title>Dean Brickland — Town Planner</title>
-<meta name="description" content="Personal site of a town planner working across policy, community, and local economic development in Ireland.">
+<meta name="description" content="Personal site of Dean Brickland, town planner. Currently being rebuilt.">
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://deanbrickland.com/">
 <link rel="icon" type="image/png" href="favicon.png">
 
-<!-- ============================================================= -->
-<!--  Open Graph / Twitter Card — link preview metadata            -->
-<!-- ============================================================= -->
-<meta property="og:type" content="profile">
+<meta property="og:type" content="website">
 <meta property="og:site_name" content="Dean Brickland">
 <meta property="og:title" content="Dean Brickland — Town Planner">
-<meta property="og:description" content="Personal site of a town planner working across policy, community, and local economic development in Ireland.">
+<meta property="og:description" content="Personal site of Dean Brickland, town planner. Currently being rebuilt.">
 <meta property="og:url" content="https://deanbrickland.com/">
 <meta property="og:image" content="https://deanbrickland.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Dean Brickland — Town Planner, Dublin. Local economic development and regeneration. Director, Irish Planning Institute.">
-<meta property="profile:first_name" content="Dean">
-<meta property="profile:last_name" content="Brickland">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dean Brickland — Town Planner">
-<meta name="twitter:description" content="Personal site of a town planner working across policy, community, and local economic development in Ireland.">
+<meta name="twitter:description" content="Personal site of Dean Brickland, town planner. Currently being rebuilt.">
 <meta name="twitter:image" content="https://deanbrickland.com/og-image.png">
-<meta name="twitter:image:alt" content="Dean Brickland — Town Planner, Dublin. Local economic development and regeneration. Director, Irish Planning Institute.">
-
-<!-- ============================================================= -->
-<!--  Structured data — helps search engines and AI systems        -->
-<!--  resolve "Dean Brickland" as a specific, unambiguous entity   -->
-<!-- ============================================================= -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "mainEntity": {
-    "@type": "Person",
-    "name": "Dean Brickland",
-    "honorificSuffix": "MIPI",
-    "jobTitle": "Town Planner",
-    "url": "https://deanbrickland.com/",
-    "image": "https://deanbrickland.com/portrait.webp",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Dublin",
-      "addressCountry": "IE"
-    },
-    "memberOf": {
-      "@type": "OrganizationRole",
-      "roleName": "Director",
-      "memberOf": {
-        "@type": "Organization",
-        "name": "Irish Planning Institute"
-      }
-    },
-    "sameAs": [
-      "https://www.linkedin.com/in/dean-brickland/"
-    ],
-    "knowsAbout": [
-      "Town planning",
-      "Development plans",
-      "Planning policy",
-      "Local economic development",
-      "Regeneration"
-    ]
-  }
-}
-</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 
 <style>
-  /* =============================================================
-     DESIGN TOKENS — deep pine, cream, lime accent
-     ============================================================= */
   :root{
-    --pine:#1D362C;        /* main dark ground */
-    --pine-deep:#162B23;   /* nav / footer strip */
-    --pine-card:#244235;   /* raised card on dark */
-    --sage:#A3B7A9;        /* muted text on dark */
-    --sage-img:#63795F;    /* tint ground behind card images */
-    --cream:#EFEDE2;       /* light ground */
-    --cream-line:#DDD9C8;  /* hairlines on light */
-    --lime:#CDF06B;        /* accent */
-    --ink:#20302A;         /* text on cream */
-    --ink-fade:#55665A;    /* muted text on cream — WCAG AA (5.2:1) */
-    --radius:18px;
-    --radius-pill:999px;
+    --pine:#1D362C;
+    --pine-deep:#162B23;
+    --sage:#A3B7A9;
+    --cream:#EFEDE2;
+    --lime:#CDF06B;
   }
-
   *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; }
-
+  html,body{ height:100%; }
   body{
     font-family:"Archivo",system-ui,sans-serif;
-    background:var(--cream);
-    color:var(--ink);
-    line-height:1.55;
+    background:var(--pine);
+    color:var(--cream);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1.5rem;
+    line-height:1.5;
     -webkit-font-smoothing:antialiased;
   }
-
-  img{ max-width:100%; display:block; }
-  a{ color:inherit; text-decoration:none; }
-
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--lime);
-    outline-offset:3px;
-    border-radius:4px;
-  }
-  /* Lime fails contrast against the cream ground (1.1:1). Links that sit
-     directly on cream (inside .light, e.g. the Writing section) get a
-     dark outline instead; the contact panel is dark pine even though
-     it's nested in .light, so it keeps the lime outline (10:1). */
-  .light a:focus-visible{ outline-color:var(--ink); }
-  .contact-panel a:focus-visible{ outline-color:var(--lime); }
-
-  .skip-link{
-    position:absolute;
-    left:-9999px; top:0;
-    background:var(--lime); color:var(--pine-deep);
-    padding:.85rem 1.4rem;
-    font-weight:600; font-size:.9rem;
-    border-radius:0 0 10px 0;
-    z-index:100;
-  }
-  .skip-link:focus{ left:0; }
-
-  .wrap{ max-width:1160px; margin-inline:auto; padding-inline:clamp(1.25rem,4vw,2.5rem); }
-
-  /* Small mono labels and pill tags */
-  .mono{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.72rem;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-  }
-  .pill{
-    display:inline-flex; align-items:center;
-    padding:.3rem .8rem;
-    border-radius:var(--radius-pill);
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    white-space:nowrap;
-  }
-
-  /* =============================================================
-     DARK HALF — nav, hero, focus cards
-     ============================================================= */
-  .dark{ background:var(--pine); color:var(--cream); }
-
-  /* NAV */
-  .nav{
-    display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
-    padding-block:1.4rem;
-  }
-  .brand{ display:flex; align-items:center; gap:.7rem; font-weight:600; font-size:1rem; }
-  .brand-chip{
+  a{ color:inherit; }
+  a:focus-visible{ outline:2px solid var(--lime); outline-offset:3px; border-radius:4px; }
+  .card{ max-width:32rem; text-align:center; }
+  .chip{
+    width:44px; height:44px;
     background:var(--cream);
     border-radius:8px;
-    padding:4px;
-    width:34px; height:34px;
-    display:flex; align-items:center; justify-content:center;
+    padding:6px;
+    margin-inline:auto;
+    margin-bottom:2rem;
   }
-  .brand-chip img{ width:100%; height:100%; object-fit:contain; }
-  .nav ul{ display:flex; gap:2rem; list-style:none; }
-  .nav ul a{ font-size:.88rem; color:var(--sage); transition:color .15s ease; }
-  .nav ul a:hover{ color:var(--cream); }
-  .nav .cta{ font-size:.88rem; color:var(--cream); border-bottom:1px solid var(--lime); padding-bottom:2px; }
-
-  /* HERO */
-  .hero{ padding-block:clamp(3rem,8vw,6rem) clamp(2.5rem,6vw,4rem); }
-  .hero h1{
-    font-size:clamp(2.4rem,6vw,4.2rem);
+  .chip img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .code{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.8rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--lime);
+    margin-bottom:1rem;
+  }
+  h1{
+    font-size:clamp(1.6rem,4vw,2.2rem);
     font-weight:600;
-    line-height:1.08;
-    letter-spacing:-.02em;
-    text-wrap:balance;
-    max-width:16ch;
+    letter-spacing:-.01em;
+    margin-bottom:1rem;
   }
-  .hero h1 em{ font-style:normal; color:var(--lime); }
-  .hero-actions{ display:flex; align-items:center; gap:.8rem; margin-top:2.2rem; }
+  p{ color:var(--sage); font-size:.95rem; margin-bottom:2rem; }
   .btn{
     display:inline-flex; align-items:center; gap:.5rem;
     background:var(--lime); color:var(--pine-deep);
     font-weight:600; font-size:.9rem;
     padding:.8rem 1.6rem;
-    border-radius:var(--radius-pill);
+    border-radius:999px;
+    text-decoration:none;
     transition:transform .15s ease, filter .15s ease;
   }
   .btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
-  .btn-plus{
-    width:44px; height:44px;
-    border-radius:50%;
-    background:var(--lime); color:var(--pine-deep);
-    display:inline-flex; align-items:center; justify-content:center;
-    font-size:1.3rem; font-weight:500; line-height:1;
-    transition:transform .15s ease, filter .15s ease;
-  }
-  .btn-plus:hover{ transform:translateY(-1px); filter:brightness(1.05); }
-  .hero-lede{
-    margin-top:2.8rem;
-    max-width:36ch;
-    margin-left:auto;
-    font-size:.92rem;
-    color:var(--sage);
-  }
-
-  /* FOCUS — featured-style card row */
-  .focus-head{
-    color:var(--sage);
-    padding-block:1rem 1.4rem;
-    border-top:1px solid rgba(239,237,226,.12);
-  }
-  .focus-head .mono{ display:flex; align-items:center; gap:.6rem; }
-  .focus-head h2{
-    color:var(--cream);
-    font-size:clamp(1.3rem,2.6vw,1.7rem);
-    font-weight:600;
-    letter-spacing:-.015em;
-    margin-top:.8rem;
-  }
-  .cards{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:1.4rem;
-    padding-bottom:clamp(3rem,7vw,5rem);
-  }
-  .card-top{
-    display:flex; align-items:center; justify-content:space-between; gap:.6rem;
-    margin-bottom:.8rem;
-  }
-  .card-top h3{ font-size:.95rem; font-weight:600; }
-  .card-top .pill{ background:rgba(239,237,226,.1); color:var(--sage); }
-  .card-img{
-    background:var(--sage-img);
-    border-radius:var(--radius);
-    overflow:hidden;
-  }
-  .card-img img{
-    width:100%; height:300px;
-    object-fit:cover;
-    mix-blend-mode:multiply;
-    filter:grayscale(1) contrast(.92) brightness(1.06);
-    opacity:.92;
-  }
-  .card p{ margin-top:1rem; font-size:.9rem; color:var(--sage); }
-
-  /* =============================================================
-     LIGHT HALF — statement, stats, writing, contact
-     ============================================================= */
-  .light{ background:var(--cream); color:var(--ink); }
-
-  .section{ padding-block:clamp(3rem,8vw,5.5rem); }
-
-  .label-pill{
-    background:var(--pine); color:var(--lime);
-    display:inline-flex;
-    padding:.35rem .9rem;
-    border-radius:var(--radius-pill);
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
-    margin-bottom:1.6rem;
-  }
-
-  /* Statement (About) */
-  .statement h2{
-    font-size:clamp(1.7rem,3.6vw,2.6rem);
-    font-weight:600;
-    letter-spacing:-.015em;
-    line-height:1.15;
-    max-width:24ch;
-    text-wrap:balance;
-  }
-  .statement .prose{ margin-top:1.8rem; max-width:60ch; }
-  .statement .prose p{
-    font-size:clamp(1.1rem,2vw,1.4rem);
-    line-height:1.4;
-    color:var(--ink-fade);
-    font-weight:500;
-  }
-  .statement .prose p + p{ margin-top:1.2rem; }
-  .about-grid{
-    display:grid;
-    grid-template-columns:1.35fr .65fr;
-    gap:clamp(2rem,5vw,4rem);
-    align-items:center;
-  }
-  .portrait{
-    margin:0;
-    border-radius:var(--radius);
-    overflow:hidden;
-    background:var(--sage-img);
-    box-shadow:0 22px 55px rgba(20,39,32,.18);
-  }
-  .portrait img{ width:100%; height:auto; display:block; }
-
-  /* Stats band */
-  .stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:1.4rem;
-    margin-top:3rem;
-  }
-  .stat{
-    background:var(--pine);
-    border-radius:var(--radius);
-    padding:2.4rem 1.6rem 2rem;
-    text-align:center;
-  }
-  .stat .big{
-    color:var(--lime);
-    font-size:clamp(1.9rem,3.5vw,2.6rem);
-    font-weight:600;
-    letter-spacing:-.02em;
-    font-variant-numeric:tabular-nums;
-  }
-  .stat .cap{
-    display:block;
-    margin-top:1.2rem;
-    color:var(--sage);
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
-  }
-
-  /* Writing */
-  .writing h2{
-    font-size:clamp(1.6rem,3vw,2.2rem);
-    font-weight:600; letter-spacing:-.015em;
-    margin-bottom:2rem;
-  }
-  .writing-empty{
-    border-top:1px solid var(--cream-line);
-    border-bottom:1px solid var(--cream-line);
-    padding-block:2rem;
-  }
-  .writing-empty p{ color:var(--ink-fade); font-size:1rem; max-width:48ch; }
-  .writing-empty a{
-    display:inline-flex; align-items:center; gap:.4rem;
-    margin-top:1.2rem;
-    font-weight:600; font-size:.9rem;
-    color:var(--ink);
-    border-bottom:1px solid var(--lime);
-    padding-bottom:2px;
-    transition:color .15s ease;
-  }
-  .writing-empty a:hover{ color:var(--sage-img); }
-
-  /* Contact panel */
-  .contact-panel{
-    background:var(--pine);
-    color:var(--cream);
-    border-radius:calc(var(--radius) + 8px);
-    padding:clamp(2.2rem,5vw,3.5rem);
-    display:grid;
-    grid-template-columns:1.2fr 1fr;
-    gap:2.5rem;
-    align-items:start;
-  }
-  .contact-panel h2{
-    font-size:clamp(1.7rem,3.4vw,2.4rem);
-    font-weight:600; letter-spacing:-.015em;
-    margin-bottom:1.2rem;
-  }
-  .contact-panel .intro{ color:var(--sage); font-size:.95rem; max-width:44ch; }
-  .channels{ list-style:none; display:flex; flex-direction:column; gap:.8rem; }
-  .channels a, .channels .static{
-    display:flex; justify-content:space-between; gap:1rem;
-    padding:.9rem 1.2rem;
-    background:var(--pine-card);
-    border-radius:12px;
-    font-size:.9rem;
-  }
-  .channels a{ transition:background .15s ease; }
-  .channels a:hover{ background:#2B4C3E; }
-  .channels .k{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
-    color:var(--sage);
-    align-self:center;
-  }
-  .channels .email-pill{
-    background:var(--lime); color:var(--pine-deep); font-weight:600;
-  }
-  .channels .email-pill:hover{ background:var(--lime); filter:brightness(1.05); }
-  .channels .email-pill .k{ color:var(--pine-deep); opacity:.7; }
-
-  /* Footer */
-  footer{
-    background:var(--pine-deep); color:var(--sage);
-    margin-top:clamp(3rem,7vw,5rem);
-  }
-  .foot{
-    display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem;
-    padding-block:1.6rem;
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
-  }
-  .foot .name{ color:var(--cream); }
-
-  /* =============================================================
-     RESPONSIVE + MOTION
-     ============================================================= */
-  @media (max-width:840px){
-    .cards, .stats{ grid-template-columns:1fr; }
-    .card-img img{ height:230px; }
-    .contact-panel{ grid-template-columns:1fr; }
-    .hero-lede{ margin-left:0; }
-    .nav ul{ display:none; }
-    .about-grid{ grid-template-columns:1fr; gap:2.4rem; }
-    .about-text{ order:1; }
-    .portrait{ order:0; max-width:340px; margin-inline:auto; }
-  }
-
-  .rise{ animation:rise .7s ease both; }
-  .r2{ animation-delay:.12s; }
-  .r3{ animation-delay:.24s; }
-  @keyframes rise{
-    from{ opacity:0; transform:translateY(14px); }
-    to{ opacity:1; transform:none; }
-  }
-  @media (prefers-reduced-motion:reduce){
-    html{ scroll-behavior:auto; }
-    .rise{ animation:none; }
-    *{ transition:none !important; }
-  }
+  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
 </style>
 </head>
-
 <body>
+  <main class="card">
+    <div class="chip"><img src="logo.png" alt="Dean Brickland"></div>
+    <div class="code">site / rebuilding</div>
+    <h1>New site coming soon.</h1>
+    <p>I'm a town planner in Dublin, currently rebuilding this site. In the meantime, the quickest way to reach me is by email or LinkedIn.</p>
+    <a class="btn" id="email-link" href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener">Find me on LinkedIn</a>
+  </main>
 
-<a class="skip-link" href="#main-content">Skip to content</a>
-
-<main>
-
-<!-- ============================ DARK HALF ============================ -->
-<div class="dark" id="top">
-  <div class="wrap">
-
-    <!-- EDIT #2 — your name / initials in the brand, below -->
-    <nav class="nav">
-      <a class="brand" href="#top">
-        <span class="brand-chip"><img src="logo.png" alt=""></span>
-        Dean Brickland
-      </a>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#focus">Focus</a></li>
-        <li><a href="#writing">Writing</a></li>
-      </ul>
-      <a class="cta" href="#contact">&nearr; Get in touch</a>
-    </nav>
-
-    <!-- ============================ HERO ============================ -->
-    <header id="main-content" class="hero" tabindex="-1">
-      <!-- EDIT #3 — the headline. The word in green gets the accent. -->
-      <h1 class="rise">Shaping how places grow, where policy, community and <em>economy</em> meet.</h1>
-
-      <div class="hero-actions rise r2">
-        <a class="btn" href="#contact">Get in touch</a>
-        <a class="btn-plus" href="#focus" aria-label="See my focus areas">+</a>
-      </div>
-
-      <!-- EDIT #4 — one or two sentences about you -->
-      <p class="hero-lede rise r3">I'm a town planner working in Irish local government and professional practice, with a focus on local economic development and the regeneration of towns and communities.</p>
-    </header>
-
-    <!-- ============================ FOCUS ============================ -->
-    <!-- EDIT #5 — your three focus areas -->
-    <section id="focus">
-      <div class="focus-head">
-        <span class="mono">&#8982; Focus</span>
-        <h2>Three things I work on.</h2>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <div class="card-top">
-            <h3>Development plans</h3>
-            <span class="pill">Policy</span>
-          </div>
-          <div class="card-img"><img src="card-plan-1.webp" alt="Illustrative site plan detail — phased landscaping zone" width="440" height="420" loading="lazy"></div>
-          <p>Drafting and reviewing statutory spatial policy, from the evidence base through to the objectives that guide how land is used.</p>
-        </div>
-        <div class="card">
-          <div class="card-top">
-            <h3>Economy &amp; regeneration</h3>
-            <span class="pill">Economy</span>
-          </div>
-          <div class="card-img"><img src="card-plan-2.webp" alt="Illustrative site plan detail — office block layout" width="460" height="380" loading="lazy"></div>
-          <p>How planning can support local economic development and the regeneration of towns, so growth reaches the communities that need it most.</p>
-        </div>
-        <div class="card">
-          <div class="card-top">
-            <h3>Profession &amp; education</h3>
-            <span class="pill">Practice</span>
-          </div>
-          <div class="card-img"><img src="card-plan-3.webp" alt="Illustrative site plan detail — logistics building and access road" width="480" height="340" loading="lazy"></div>
-          <p>Supporting standards and continuing education across the planning profession, so practice keeps pace with the questions it faces.</p>
-        </div>
-      </div>
-    </section>
-
-  </div>
-</div>
-
-<!-- ============================ LIGHT HALF ============================ -->
-<div class="light">
-  <div class="wrap">
-
-    <!-- ============================ ABOUT ============================ -->
-    <!-- EDIT #6 — your about text -->
-    <section id="about" class="section statement">
-      <div class="about-grid">
-        <div class="about-text">
-          <span class="label-pill">A / About</span>
-          <h2>Between the plan and the decision.</h2>
-          <div class="prose">
-            <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
-            <p>Alongside that, I care about how planning supports local economic development — how regeneration is funded, sequenced, and made to last in the towns that need it most. Good planning is patient, transparent, and accountable, and I try to bring that same posture to the way places are renewed.</p>
-          </div>
-        </div>
-        <figure class="portrait">
-          <img src="portrait.webp" alt="Dean Brickland" width="840" height="1050" loading="lazy">
-        </figure>
-      </div>
-
-      <!-- EDIT #7 — the three stat cards. Swap in real numbers if you
-           like (e.g. years in practice, plans worked on). -->
-      <div class="stats">
-        <div class="stat">
-          <span class="big">Director</span>
-          <span class="cap">Irish Planning Institute</span>
-        </div>
-        <div class="stat">
-          <span class="big">Dublin, IE</span>
-          <span class="cap">Base of practice</span>
-        </div>
-        <div class="stat">
-          <span class="big">3</span>
-          <span class="cap">Focus areas &mdash; policy, economy, practice</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================ WRITING ============================ -->
-    <!-- EDIT #8 — replace with real posts/links, or delete this section.
-         Each row: date · title · type. Point href at your article. -->
-    <section id="writing" class="section writing">
-      <span class="label-pill">B / Writing</span>
-      <h2>Notes &amp; writing.</h2>
-      <div class="writing-empty">
-        <p>The first essays are still in progress. In the meantime, the quickest way to keep up is on LinkedIn.</p>
-        <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener">Follow on LinkedIn &rarr;</a>
-      </div>
-    </section>
-
-    <!-- ============================ CONTACT ============================ -->
-    <!-- EDIT #9 — your real email and links -->
-    <section id="contact" class="section">
-      <div class="contact-panel">
-        <div>
-          <h2>Get in touch.</h2>
-          <p class="intro">Open to conversations about planning practice, spatial policy, and local economic development in the public sector. The quickest way to reach me is by email.</p>
-        </div>
-        <ul class="channels">
-          <li><a class="email-pill" id="email-link" href="#contact"><span class="k">Email</span><span id="email-text">Show address</span></a></li>
-          <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
-          <li><div class="static"><span class="k">Location</span><span>Dublin, Ireland</span></div></li>
-        </ul>
-      </div>
-    </section>
-
-  </div>
-</div>
-
-</main>
-
-<!-- ============================ FOOTER ============================ -->
-<!-- EDIT #10 — your name, role, location -->
-<footer>
-  <div class="wrap foot">
-    <span class="name">Dean Brickland MIPI</span>
-    <span>Town Planner</span>
-    <span>Dublin, IE</span>
-    <span>&copy; <span id="yr">2026</span></span>
-  </div>
-</footer>
-
-<script>
-  // Fills the current year in the footer. Harmless if it fails.
-  document.getElementById('yr').textContent = new Date().getFullYear();
-
-  // Assembles the contact email at runtime so the address never appears
-  // in the static HTML that spam harvesters scrape.
-  (function(){
-    var user = 'dean';
-    var host = ['deanbrickland', 'com'].join('.');
-    var addr = user + '@' + host;
-    var link = document.getElementById('email-link');
-    link.href = 'mailto:' + addr;
-    document.getElementById('email-text').textContent = addr;
-  })();
-</script>
+  <script>
+    // Assembles a mailto fallback only if JS runs, so the plaintext
+    // address never appears in the static HTML (see AGENTS.md).
+    (function(){
+      var user = 'dean';
+      var host = ['deanbrickland', 'com'].join('.');
+      var addr = user + '@' + host;
+      var note = document.createElement('p');
+      note.style.marginTop = '-1rem';
+      note.style.marginBottom = '2rem';
+      note.style.fontSize = '.85rem';
+      var a = document.createElement('a');
+      a.href = 'mailto:' + addr;
+      a.textContent = addr;
+      a.style.borderBottom = '1px solid #CDF06B';
+      note.appendChild(document.createTextNode('or '));
+      note.appendChild(a);
+      document.querySelector('.card p').after(note);
+    })();
+  </script>
 </body>
 </html>

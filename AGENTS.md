@@ -25,6 +25,13 @@ Rules:
 - If you discover the site republished unexpectedly, the cause is
   almost certainly a push landed on the Pages source branch. Check
   `git log` on that branch before assuming it's a GitHub-side issue.
+- **`main`'s `index.html` may be a deliberate placeholder** ("New site
+  coming soon"), not the real site — check before assuming it's stale
+  or broken. `main` and `draft` are allowed to diverge on purpose: the
+  human can ask for a placeholder to go live on `main` while the real
+  build keeps progressing on `draft`. Don't "fix" `main` by copying
+  `draft` over it without being asked — that's a publish action same
+  as any other push to the Pages source branch.
 
 ## Content rules
 
