@@ -53,12 +53,8 @@
       "addressCountry": "IE"
     },
     "memberOf": {
-      "@type": "OrganizationRole",
-      "roleName": "Director",
-      "memberOf": {
-        "@type": "Organization",
-        "name": "Irish Planning Institute"
-      }
+      "@type": "Organization",
+      "name": "Irish Planning Institute"
     },
     "sameAs": [
       "https://www.linkedin.com/in/dean-brickland/"
@@ -86,10 +82,14 @@
     --pine:#1D362C;        /* main dark ground */
     --pine-deep:#162B23;   /* nav / footer strip */
     --pine-card:#244235;   /* raised card on dark */
+    --pine-card-hover:#2B4C3E;
+    --pine-shadow:rgba(20,39,32,.18);
     --sage:#A3B7A9;        /* muted text on dark */
     --sage-img:#63795F;    /* tint ground behind card images */
     --cream:#EFEDE2;       /* light ground */
     --cream-line:#DDD9C8;  /* hairlines on light */
+    --cream-line-dark:rgba(239,237,226,.12);
+    --cream-wash-dark:rgba(239,237,226,.1);
     --lime:#CDF06B;        /* accent */
     --ink:#20302A;         /* text on cream */
     --ink-fade:#55665A;    /* muted text on cream — WCAG AA (5.2:1) */
@@ -220,7 +220,7 @@
   .focus-head{
     color:var(--sage);
     padding-block:1rem 1.4rem;
-    border-top:1px solid rgba(239,237,226,.12);
+    border-top:1px solid var(--cream-line-dark);
   }
   .focus-head .mono{ display:flex; align-items:center; gap:.6rem; }
   .focus-head h2{
@@ -241,7 +241,7 @@
     margin-bottom:.8rem;
   }
   .card-top h3{ font-size:.95rem; font-weight:600; }
-  .card-top .pill{ background:rgba(239,237,226,.1); color:var(--sage); }
+  .card-top .pill{ background:var(--cream-wash-dark); color:var(--sage); }
   .card-img{
     background:var(--sage-img);
     border-radius:var(--radius);
@@ -301,7 +301,7 @@
     border-radius:var(--radius);
     overflow:hidden;
     background:var(--sage-img);
-    box-shadow:0 22px 55px rgba(20,39,32,.18);
+    box-shadow:0 22px 55px var(--pine-shadow);
   }
   .portrait img{ width:100%; height:auto; display:block; }
 
@@ -382,7 +382,7 @@
     font-size:.9rem;
   }
   .channels a{ transition:background .15s ease; }
-  .channels a:hover{ background:#2B4C3E; }
+  .channels a:hover{ background:var(--pine-card-hover); }
   .channels .k{
     font-family:"IBM Plex Mono",monospace;
     font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
@@ -450,7 +450,7 @@
     <!-- EDIT #2 — your name / initials in the brand, below -->
     <nav class="nav">
       <a class="brand" href="#top">
-        <span class="brand-chip"><img src="logo.png" alt=""></span>
+        <span class="brand-chip"><img src="logo.png" alt="" width="26" height="26"></span>
         Dean Brickland
       </a>
       <ul>
@@ -573,7 +573,7 @@
           <p class="intro">Open to conversations about planning practice, spatial policy, and local economic development in the public sector. The quickest way to reach me is by email.</p>
         </div>
         <ul class="channels">
-          <li><a class="email-pill" id="email-link" href="#contact"><span class="k">Email</span><span id="email-text">Show address</span></a></li>
+          <li><a class="email-pill" id="email-link" href="#contact"><span class="k">Email</span><span id="email-text" aria-live="polite">Show address</span></a></li>
           <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
           <li><div class="static"><span class="k">Location</span><span>Dublin, Ireland</span></div></li>
         </ul>
@@ -600,15 +600,26 @@
   // Fills the current year in the footer. Harmless if it fails.
   document.getElementById('yr').textContent = new Date().getFullYear();
 
-  // Assembles the contact email at runtime so the address never appears
-  // in the static HTML that spam harvesters scrape.
+  // Assembles the contact email only after a deliberate click, so the
+  // address is neither present in static HTML nor inserted into the DOM
+  // during page load.
   (function(){
-    var user = 'dean';
-    var host = ['deanbrickland', 'com'].join('.');
-    var addr = user + '@' + host;
     var link = document.getElementById('email-link');
-    link.href = 'mailto:' + addr;
-    document.getElementById('email-text').textContent = addr;
+    var text = document.getElementById('email-text');
+
+    link.addEventListener('click', function(event){
+      if (link.dataset.revealed === 'true') return;
+
+      event.preventDefault();
+      var user = 'dean';
+      var host = ['deanbrickland', 'com'].join('.');
+      var addr = user + '@' + host;
+
+      link.href = 'mailto:' + addr;
+      link.dataset.revealed = 'true';
+      link.setAttribute('aria-label', 'Email ' + addr);
+      text.textContent = addr;
+    });
   })();
 </script>
 </body>

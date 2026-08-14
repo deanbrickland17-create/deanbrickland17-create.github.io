@@ -7,10 +7,10 @@ in this project's history. Don't repeat them.
 
 ## Branch discipline — read this first
 
-**GitHub Pages deploys from a branch, and every push to that branch
-redeploys the live site immediately.** There is no staging, no
-preview step, no confirmation. Check Settings → Pages → Source to see
-which branch is currently live before doing anything else.
+**GitHub Pages currently deploys `main`, which intentionally serves a
+holding page. Every push to the Pages source redeploys the live site
+immediately.** There is no staging, preview step, or confirmation.
+Check Settings → Pages → Source before changing deployment behavior.
 
 Rules:
 
@@ -19,7 +19,13 @@ Rules:
   the site should go live now. "Make this change" is not the same
   instruction as "publish this change" — they are two separate asks
   and the second one requires explicit confirmation.
-- Do development on `draft` or a feature branch. Push there freely.
+- Treat `draft` as the canonical website development branch. Temporary
+  feature branches should start from it and be removed after integration.
+- The original visual directions are preserved as
+  `concept/pine-original` and `concept/softclub-original` tags. Use
+  those tags for reference; do not recreate long-lived style branches.
+- `claude/personal-finance-tracker-ke5kgk` contains separate finance
+  tracker work and is not part of the website branch strategy.
 - If you're unsure whether the site is currently meant to be live or
   not, ask. Don't infer it from the state of the branch.
 - If you discover the site republished unexpectedly, the cause is
@@ -50,9 +56,10 @@ Rules:
 `dean@deanbrickland.com` was harvested by spam bots once already. The
 fix in place:
 
-- The contact email is **assembled at runtime by a small inline
-  script** (`index.html`, near the closing `</body>`), not written as
-  a plaintext `mailto:` link or plaintext text node.
+- The contact email is **assembled only after the visitor activates
+  "Show address"** (`index.html`, near the closing `</body>`). It is
+  not written as a plaintext `mailto:` link, inserted into the DOM on
+  page load, or stored as a plaintext text node.
 - The literal address does **not** appear anywhere in static HTML,
   JSON-LD, or `llms.txt`. `llms.txt` points at `/#contact` instead of
   printing the address.
@@ -71,16 +78,18 @@ identity, defined entirely as CSS custom properties at the top of the
 `<style>` block in `index.html`:
 
 ```
---pine, --pine-deep, --pine-card   dark grounds
+--pine, --pine-deep, --pine-card, --pine-card-hover   dark grounds
+--pine-shadow                     shadow tint on light
 --sage, --sage-img                  muted green / image-tint
---cream, --cream-line               light ground / hairlines
+--cream, --cream-line, --cream-line-dark, --cream-wash-dark
+                                   light ground / hairlines / dark overlays
 --lime                              accent
 --ink, --ink-fade                   text on cream
 ```
 
 An alternate style direction ("Gen X Soft Club" — cool greys, washed
-denim/sage, lowercase Helvetica, blue-cast imagery) exists on
-`style-softclub`, branched from `draft`. If asked to restyle:
+denim/sage, lowercase Helvetica, blue-cast imagery) is archived at
+the `concept/softclub-original` tag. If asked to restyle:
 
 - Change tokens, not one-off hex values scattered through rules. Every
   color in the page should trace back to a `:root` custom property.
@@ -90,7 +99,7 @@ denim/sage, lowercase Helvetica, blue-cast imagery) exists on
 - The site has no build step and no bundler. Don't introduce one for
   a styling change — plain CSS in the single `<style>` block is the
   convention here, on purpose, for a page this size.
-- Preserve the responsive breakpoints (`840px`, `560px`) and the
+- Preserve the responsive breakpoint (`840px`) and the
   `prefers-reduced-motion` handling already in place.
 - Any new branch should fork from `draft` (which carries the current
   content/SEO/anti-scraping baseline), not from `main`.
@@ -106,8 +115,9 @@ Before committing:
 
 1. **Run the checker**: `python3 scripts/check.py` (add `--no-network`
    in a sandboxed environment with no outbound access). It checks for
-   broken local links/images, dead `#fragment` anchors, missing `alt`
-   attributes, missing `<title>`/description/`lang`, invalid JSON-LD,
+   broken local links/images, dead `#fragment` anchors, duplicate IDs,
+   image dimensions and `alt` attributes, document landmarks/headings,
+   safe new-tab links, metadata, JSON-LD syntax and membership ranges,
    and the plaintext-email regression described above. This also runs
    automatically in CI via `.github/workflows/check.yml` on every push
    and PR.

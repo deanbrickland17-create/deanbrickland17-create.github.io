@@ -5,10 +5,23 @@ Irish Planning Institute. Single-page static site, no build step.
 
 ## Status
 
-The site is currently **unpublished** (GitHub Pages Source is set to
-`None` under Settings → Pages) while it's under revision. `main` is
-the published branch — see [Branches](#branches) below before pushing
-anything to it.
+The custom domain is live, but `main` currently serves an intentional
+"new site coming soon" holding page. The full personal site is being
+developed on `draft` and must not be published without explicit
+approval.
+
+## Branches
+
+| Ref | Purpose |
+|---|---|
+| `main` | Production-only GitHub Pages source; currently the holding page |
+| `draft` | Canonical development branch for the personal website |
+| `concept/pine-original` | Tag preserving the original pine/cream/lime design |
+| `concept/softclub-original` | Tag preserving the original Soft Club design |
+| `claude/personal-finance-tracker-ke5kgk` | Separate finance-tracker work, retained because it contains substantive content |
+
+The design tags are reference snapshots, not active development
+branches. New website work should start from `draft`.
 
 ## Stack
 
