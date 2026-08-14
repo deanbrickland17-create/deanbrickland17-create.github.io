@@ -15,10 +15,14 @@
 <meta property="og:description" content="Personal site of Dean Brickland, town planner. Currently being rebuilt.">
 <meta property="og:url" content="https://deanbrickland.com/">
 <meta property="og:image" content="https://deanbrickland.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dean Brickland — Town Planner">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dean Brickland — Town Planner">
 <meta name="twitter:description" content="Personal site of Dean Brickland, town planner. Currently being rebuilt.">
 <meta name="twitter:image" content="https://deanbrickland.com/og-image.png">
+<meta name="twitter:image:alt" content="Dean Brickland — Town Planner">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,93 +30,295 @@
 
 <style>
   :root{
-    --pine:#1D362C;
-    --pine-deep:#162B23;
-    --sage:#A3B7A9;
-    --cream:#EFEDE2;
-    --lime:#CDF06B;
+    --paper:#FFFFFF;
+    --ink:#202124;
+    --ink-soft:#606369;
+    --ink-faint:#7B7E84;
+    --line:#E1E2E4;
+    --line-strong:#C9CBCF;
+    --surface:#F5F5F3;
+    --focus:#202124;
+    --max-width:1180px;
+    --gutter:clamp(1.25rem,4vw,2.75rem);
   }
+
   *{ box-sizing:border-box; margin:0; padding:0; }
-  html,body{ height:100%; }
+  html{ scroll-behavior:smooth; }
   body{
-    font-family:"Archivo",system-ui,sans-serif;
-    background:var(--pine);
-    color:var(--cream);
+    min-width:280px;
+    min-height:100vh;
+    min-height:100svh;
+    display:grid;
+    grid-template-rows:auto 1fr auto;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  img{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  button{ color:inherit; font:inherit; }
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--focus);
+    outline-offset:4px;
+    border-radius:2px;
+  }
+
+  .skip-link{
+    position:fixed;
+    top:.75rem;
+    left:.75rem;
+    z-index:10;
+    transform:translateY(-160%);
+    background:var(--ink);
+    color:var(--paper);
+    padding:.7rem 1rem;
+    font-size:.875rem;
+    font-weight:600;
+    text-decoration:none;
+  }
+  .skip-link:focus{ transform:none; }
+
+  .wrap{
+    width:min(100%,calc(var(--max-width) + (var(--gutter) * 2)));
+    margin-inline:auto;
+    padding-inline:var(--gutter);
+  }
+  .mono{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    line-height:1.4;
+    text-transform:uppercase;
+  }
+
+  .site-header{ background:var(--paper); }
+  .header-inner{
+    min-height:88px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:2rem;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:.75rem;
+    width:max-content;
+    font-size:.98rem;
+    font-weight:600;
+    text-decoration:none;
+  }
+  .brand-chip{
+    width:34px;
+    height:34px;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:1.5rem;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    padding:4px;
+    background:var(--paper);
+    border:1px solid var(--line-strong);
+    border-radius:6px;
   }
-  a{ color:inherit; }
-  a:focus-visible{ outline:2px solid var(--lime); outline-offset:3px; border-radius:4px; }
-  .card{ max-width:32rem; text-align:center; }
-  .chip{
-    width:44px; height:44px;
-    background:var(--cream);
-    border-radius:8px;
-    padding:6px;
-    margin-inline:auto;
-    margin-bottom:2rem;
+  .brand-chip img{ width:100%; height:100%; object-fit:contain; }
+  .header-role{ color:var(--ink-soft); font-size:.9rem; }
+
+  main{ display:flex; }
+  main:focus{ outline:none; }
+  .holding{
+    flex:1;
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(18rem,.7fr);
+    gap:clamp(3rem,8vw,8rem);
+    align-items:end;
+    padding-block:clamp(5rem,12vw,9.5rem) clamp(4.5rem,10vw,8rem);
   }
-  .chip img{ width:100%; height:100%; object-fit:contain; display:block; }
-  .code{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.8rem;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--lime);
-    margin-bottom:1rem;
-  }
+  .status{ margin-bottom:1.5rem; color:var(--ink-faint); }
   h1{
-    font-size:clamp(1.6rem,4vw,2.2rem);
-    font-weight:600;
-    letter-spacing:-.01em;
-    margin-bottom:1rem;
+    max-width:11ch;
+    font-size:clamp(3.2rem,6.4vw,5rem);
+    font-weight:500;
+    letter-spacing:-.05em;
+    line-height:1;
+    text-wrap:balance;
   }
-  p{ color:var(--sage); font-size:.95rem; margin-bottom:2rem; }
-  .btn{
-    display:inline-flex; align-items:center; gap:.5rem;
-    background:var(--lime); color:var(--pine-deep);
-    font-weight:600; font-size:.9rem;
-    padding:.8rem 1.6rem;
-    border-radius:999px;
-    text-decoration:none;
-    transition:transform .15s ease, filter .15s ease;
+  .holding-copy{
+    max-width:40ch;
+    justify-self:end;
+    padding-bottom:.25rem;
   }
-  .btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
-  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+  .holding-copy > p{ color:var(--ink-soft); font-size:clamp(1rem,1.35vw,1.1rem); }
+
+  .contact-list{
+    margin-top:2.5rem;
+    border-top:1px solid var(--line-strong);
+  }
+  .contact-row{
+    min-width:0;
+    display:grid;
+    grid-template-columns:6rem minmax(0,1fr);
+    gap:1rem;
+    align-items:center;
+    min-height:58px;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .contact-label{ color:var(--ink-faint); }
+  .contact-row > a, .contact-row .contact-value, .contact-row button{
+    min-width:0;
+    justify-self:end;
+    text-align:right;
+    overflow-wrap:anywhere;
+  }
+  .contact-row > a, .contact-row button{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+    font-weight:500;
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:4px;
+  }
+
+  .foot{
+    min-height:76px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem 2rem;
+    border-top:1px solid var(--line);
+    color:var(--ink-faint);
+  }
+  .foot span{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.74rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .foot .name{ color:var(--ink); }
+
+  @media (prefers-reduced-motion:no-preference){
+    .intro-rise{ animation:intro-rise .6s cubic-bezier(.22,.72,.28,1) both; }
+    .intro-delay{ animation-delay:.12s; }
+    .contact-row a span:last-child, .contact-row button span:last-child{
+      transition:transform .2s ease;
+    }
+    .contact-row a:hover span:last-child, .contact-row a:focus-visible span:last-child,
+    .contact-row button:hover span:last-child, .contact-row button:focus-visible span:last-child{
+      transform:translate(3px,-3px);
+    }
+  }
+  @keyframes intro-rise{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:none; }
+  }
+
+  @media (max-width:760px){
+    .holding{
+      grid-template-columns:1fr;
+      gap:4rem;
+      align-content:center;
+      padding-block:4.5rem 5rem;
+    }
+    .holding-copy{ justify-self:start; }
+  }
+
+  @media (max-width:480px){
+    .header-inner{ min-height:78px; }
+    .header-role{ display:none; }
+    h1{ font-size:clamp(2.8rem,14vw,3.8rem); }
+    .contact-row{ grid-template-columns:1fr; gap:.1rem; padding-block:.75rem; }
+    .contact-row > a, .contact-row .contact-value, .contact-row button{
+      justify-self:start;
+      text-align:left;
+    }
+    .foot{ justify-content:flex-start; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    .intro-rise{ animation:none; transform:none; }
+    .contact-row a span:last-child, .contact-row button span:last-child{ transition:none; }
+  }
 </style>
 </head>
+
 <body>
-  <main class="card">
-    <div class="chip"><img src="logo.png" alt="Dean Brickland"></div>
-    <div class="code">site / rebuilding</div>
-    <h1>New site coming soon.</h1>
-    <p>I'm a town planner in Dublin, currently rebuilding this site. In the meantime, the quickest way to reach me is by email or LinkedIn.</p>
-    <a class="btn" id="email-link" href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener">Find me on LinkedIn</a>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/" aria-label="Dean Brickland homepage">
+        <span class="brand-chip"><img src="logo.png" alt="" width="26" height="26"></span>
+        Dean Brickland
+      </a>
+      <span class="header-role">Town Planner</span>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <div class="wrap holding">
+      <div class="intro-rise">
+        <p class="status mono">Site / rebuilding</p>
+        <h1>New site coming soon.</h1>
+      </div>
+
+      <div class="holding-copy intro-rise intro-delay">
+        <p>I'm a town planner in Dublin, currently rebuilding this site. In the meantime, the quickest way to reach me is by email or LinkedIn.</p>
+
+        <div class="contact-list">
+          <div class="contact-row">
+            <span class="contact-label mono">Email</span>
+            <span id="email-slot" class="contact-value" aria-live="polite">
+              <button id="email-reveal" type="button" aria-controls="email-slot">Show address <span aria-hidden="true">&nearr;</span></button>
+            </span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label mono">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span>View profile</span><span aria-hidden="true">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
+  <footer>
+    <div class="wrap foot">
+      <span class="name">Dean Brickland</span>
+      <span>Dublin, IE</span>
+      <span>&copy; <span id="yr">2026</span></span>
+    </div>
+  </footer>
+
   <script>
-    // Assembles a mailto fallback only if JS runs, so the plaintext
-    // address never appears in the static HTML (see AGENTS.md).
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
     (function(){
-      var user = 'dean';
-      var host = ['deanbrickland', 'com'].join('.');
-      var addr = user + '@' + host;
-      var note = document.createElement('p');
-      note.style.marginTop = '-1rem';
-      note.style.marginBottom = '2rem';
-      note.style.fontSize = '.85rem';
-      var a = document.createElement('a');
-      a.href = 'mailto:' + addr;
-      a.textContent = addr;
-      a.style.borderBottom = '1px solid #CDF06B';
-      note.appendChild(document.createTextNode('or '));
-      note.appendChild(a);
-      document.querySelector('.card p').after(note);
+      var button = document.getElementById('email-reveal');
+      var slot = document.getElementById('email-slot');
+
+      button.addEventListener('click', function(){
+        var user = 'dean';
+        var host = ['deanbrickland', 'com'].join('.');
+        var address = user + '@' + host;
+        var link = document.createElement('a');
+
+        link.href = 'mailto:' + address;
+        link.textContent = address;
+        link.setAttribute('aria-label', 'Email ' + address);
+        slot.replaceChildren(link);
+        link.focus();
+      }, { once:true });
     })();
   </script>
 </body>
 </html>
+
