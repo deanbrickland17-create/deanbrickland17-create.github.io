@@ -73,33 +73,43 @@ fix in place:
 
 ## Design conventions
 
-The current default style (on `draft`) is a dark pine/cream/lime
-identity, defined entirely as CSS custom properties at the top of the
-`<style>` block in `index.html`:
+The current style (on `draft`) is a white/charcoal editorial system,
+defined entirely as CSS custom properties at the top of the `<style>`
+block in `index.html`. It is the same system as the live holding page
+on `main` and as `404.html`:
 
 ```
---pine, --pine-deep, --pine-card, --pine-card-hover   dark grounds
---pine-shadow                     shadow tint on light
---sage, --sage-img                  muted green / image-tint
---cream, --cream-line, --cream-line-dark, --cream-wash-dark
-                                   light ground / hairlines / dark overlays
---lime                              accent
---ink, --ink-fade                   text on cream
+--paper                white ground
+--ink                  charcoal text (16:1 on paper)
+--ink-soft             body copy (6.0:1)
+--ink-faint            small mono labels (5.1:1, AA) -- do not lighten
+--line, --line-strong  hairline dividers / row rules
+--surface              ground behind images
 ```
 
-An alternate style direction ("Gen X Soft Club" — cool greys, washed
-denim/sage, lowercase Helvetica, blue-cast imagery) is archived at
-the `concept/softclub-original` tag. If asked to restyle:
+Structure is hairline rules and rows rather than cards or filled
+pills: uppercase mono labels, underlined text links with a `↗`
+arrow, small radii (`--radius: 3px`), greyscale photography (applied
+in CSS, not baked into the files). Sections are lettered A–D in scroll
+order (Focus, About, Writing, Contact) -- keep the letters in the
+order they appear on the page.
+
+The former dark pine/cream/lime identity is archived at the
+`concept/pine-original` tag.
+
+Another direction ("Gen X Soft Club" — cool greys, washed denim/sage,
+lowercase Helvetica, blue-cast imagery) is archived at the
+`concept/softclub-original` tag. If asked to restyle:
 
 - Change tokens, not one-off hex values scattered through rules. Every
   color in the page should trace back to a `:root` custom property.
-- Keep both light/dark visual roles working — sections alternate
-  between a dark "hero" band and light content bands; a new palette
-  needs to work in both.
+- Check contrast for every new text/background pair (small text needs
+  4.5:1). The holding page's original `--ink-faint` (`#7B7E84`) failed
+  at 4.07:1 and was darkened here.
 - The site has no build step and no bundler. Don't introduce one for
   a styling change — plain CSS in the single `<style>` block is the
   convention here, on purpose, for a page this size.
-- Preserve the responsive breakpoint (`840px`) and the
+- Preserve the responsive breakpoints (`840px`, `480px`) and the
   `prefers-reduced-motion` handling already in place.
 - Any new branch should fork from `draft` (which carries the current
   content/SEO/anti-scraping baseline), not from `main`.

@@ -76,362 +76,353 @@
 
 <style>
   /* =============================================================
-     DESIGN TOKENS — deep pine, cream, lime accent
+     DESIGN TOKENS — white paper, charcoal ink, grey hairlines.
+     Shared with the holding page and 404.html.
      ============================================================= */
   :root{
-    --pine:#1D362C;        /* main dark ground */
-    --pine-deep:#162B23;   /* nav / footer strip */
-    --pine-card:#244235;   /* raised card on dark */
-    --pine-card-hover:#2B4C3E;
-    --pine-shadow:rgba(20,39,32,.18);
-    --sage:#A3B7A9;        /* muted text on dark */
-    --sage-img:#63795F;    /* tint ground behind card images */
-    --cream:#EFEDE2;       /* light ground */
-    --cream-line:#DDD9C8;  /* hairlines on light */
-    --cream-line-dark:rgba(239,237,226,.12);
-    --cream-wash-dark:rgba(239,237,226,.1);
-    --lime:#CDF06B;        /* accent */
-    --ink:#20302A;         /* text on cream */
-    --ink-fade:#55665A;    /* muted text on cream — WCAG AA (5.2:1) */
-    --radius:18px;
-    --radius-pill:999px;
+    --paper:#FFFFFF;
+    --ink:#202124;         /* text on paper */
+    --ink-soft:#606369;    /* body copy — 6.0:1 on paper */
+    --ink-faint:#6B6E74;   /* small mono labels — 5.1:1 on paper (AA) */
+    --line:#E1E2E4;        /* quiet dividers */
+    --line-strong:#C9CBCF; /* row rules */
+    --surface:#F5F5F3;     /* ground behind images */
+    --radius:3px;
+    --max-width:1180px;
+    --gutter:clamp(1.25rem,4vw,2.75rem);
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; }
-
   body{
-    font-family:"Archivo",system-ui,sans-serif;
-    background:var(--cream);
+    min-width:280px;
+    background:var(--paper);
     color:var(--ink);
-    line-height:1.55;
+    font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
 
-  img{ max-width:100%; display:block; }
-  a{ color:inherit; text-decoration:none; }
-
+  img{ display:block; max-width:100%; }
+  a{ color:inherit; }
   a:focus-visible, button:focus-visible{
-    outline:2px solid var(--lime);
-    outline-offset:3px;
-    border-radius:4px;
+    outline:2px solid var(--ink);
+    outline-offset:4px;
+    border-radius:2px;
   }
-  /* Lime fails contrast against the cream ground (1.1:1). Links that sit
-     directly on cream (inside .light, e.g. the Writing section) get a
-     dark outline instead; the contact panel is dark pine even though
-     it's nested in .light, so it keeps the lime outline (10:1). */
-  .light a:focus-visible{ outline-color:var(--ink); }
-  .contact-panel a:focus-visible{ outline-color:var(--lime); }
 
   .skip-link{
-    position:absolute;
-    left:-9999px; top:0;
-    background:var(--lime); color:var(--pine-deep);
-    padding:.85rem 1.4rem;
-    font-weight:600; font-size:.9rem;
-    border-radius:0 0 10px 0;
-    z-index:100;
+    position:fixed;
+    top:.75rem; left:.75rem;
+    z-index:10;
+    transform:translateY(-160%);
+    background:var(--ink);
+    color:var(--paper);
+    padding:.7rem 1rem;
+    font-size:.875rem;
+    font-weight:600;
+    text-decoration:none;
   }
-  .skip-link:focus{ left:0; }
+  .skip-link:focus{ transform:none; }
 
-  .wrap{ max-width:1160px; margin-inline:auto; padding-inline:clamp(1.25rem,4vw,2.5rem); }
-
-  /* Small mono labels and pill tags */
+  .wrap{
+    width:min(100%,calc(var(--max-width) + (var(--gutter) * 2)));
+    margin-inline:auto;
+    padding-inline:var(--gutter);
+  }
   .mono{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.72rem;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.76rem;
     letter-spacing:.08em;
+    line-height:1.4;
     text-transform:uppercase;
-  }
-  .pill{
-    display:inline-flex; align-items:center;
-    padding:.3rem .8rem;
-    border-radius:var(--radius-pill);
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    white-space:nowrap;
   }
 
   /* =============================================================
-     DARK HALF — nav, hero, focus cards
+     HEADER
      ============================================================= */
-  .dark{ background:var(--pine); color:var(--cream); }
-
-  /* NAV */
-  .nav{
-    display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
-    padding-block:1.4rem;
+  .site-header{ border-bottom:1px solid var(--line); }
+  .header-inner{
+    min-height:88px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:2rem;
   }
-  .brand{ display:flex; align-items:center; gap:.7rem; font-weight:600; font-size:1rem; }
+  .brand{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:.75rem;
+    font-size:.98rem;
+    font-weight:600;
+    text-decoration:none;
+  }
   .brand-chip{
-    background:var(--cream);
-    border-radius:8px;
-    padding:4px;
     width:34px; height:34px;
     display:flex; align-items:center; justify-content:center;
+    padding:4px;
+    background:var(--paper);
+    border:1px solid var(--line-strong);
+    border-radius:6px;
   }
   .brand-chip img{ width:100%; height:100%; object-fit:contain; }
+  .nav{ display:flex; align-items:center; gap:2.25rem; }
   .nav ul{ display:flex; gap:2rem; list-style:none; }
-  .nav ul a{ font-size:.88rem; color:var(--sage); transition:color .15s ease; }
-  .nav ul a:hover{ color:var(--cream); }
-  .nav .cta{ font-size:.88rem; color:var(--cream); border-bottom:1px solid var(--lime); padding-bottom:2px; }
+  .nav a{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    color:var(--ink-soft);
+    font-size:.9rem;
+    text-decoration:none;
+    transition:color .15s ease;
+  }
+  .nav a:hover{ color:var(--ink); }
+  .nav .cta{
+    gap:.45rem;
+    color:var(--ink);
+    font-weight:500;
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:5px;
+  }
 
-  /* HERO */
-  .hero{ padding-block:clamp(3rem,8vw,6rem) clamp(2.5rem,6vw,4rem); }
+  main:focus{ outline:none; }
+
+  /* =============================================================
+     HERO
+     ============================================================= */
+  .hero{
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(18rem,.7fr);
+    gap:clamp(3rem,8vw,8rem);
+    align-items:end;
+    padding-block:clamp(4.5rem,11vw,8.5rem) clamp(4rem,9vw,7rem);
+  }
   .hero h1{
-    font-size:clamp(2.4rem,6vw,4.2rem);
-    font-weight:600;
-    line-height:1.08;
-    letter-spacing:-.02em;
+    max-width:15ch;
+    font-size:clamp(2.6rem,5.6vw,4.6rem);
+    font-weight:500;
+    letter-spacing:-.045em;
+    line-height:1.02;
     text-wrap:balance;
-    max-width:16ch;
   }
-  .hero h1 em{ font-style:normal; color:var(--lime); }
-  .hero-actions{ display:flex; align-items:center; gap:.8rem; margin-top:2.2rem; }
-  .btn{
-    display:inline-flex; align-items:center; gap:.5rem;
-    background:var(--lime); color:var(--pine-deep);
-    font-weight:600; font-size:.9rem;
-    padding:.8rem 1.6rem;
-    border-radius:var(--radius-pill);
-    transition:transform .15s ease, filter .15s ease;
+  .hero h1 em{
+    font-style:normal;
+    text-decoration:underline;
+    text-decoration-thickness:.05em;
+    text-underline-offset:.14em;
   }
-  .btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
-  .btn-plus{
-    width:44px; height:44px;
-    border-radius:50%;
-    background:var(--lime); color:var(--pine-deep);
-    display:inline-flex; align-items:center; justify-content:center;
-    font-size:1.3rem; font-weight:500; line-height:1;
-    transition:transform .15s ease, filter .15s ease;
+  .hero-copy{ max-width:40ch; justify-self:end; padding-bottom:.25rem; }
+  .hero-copy > p{ color:var(--ink-soft); font-size:clamp(1rem,1.35vw,1.1rem); }
+
+  .row-list{ margin-top:2.5rem; border-top:1px solid var(--line-strong); }
+  .row-link{
+    min-height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    border-bottom:1px solid var(--line-strong);
+    font-weight:500;
+    text-decoration:none;
   }
-  .btn-plus:hover{ transform:translateY(-1px); filter:brightness(1.05); }
-  .hero-lede{
-    margin-top:2.8rem;
-    max-width:36ch;
-    margin-left:auto;
-    font-size:.92rem;
-    color:var(--sage);
+  .text-link{
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    min-height:44px;
+    font-weight:500;
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:5px;
   }
 
-  /* FOCUS — featured-style card row */
-  .focus-head{
-    color:var(--sage);
-    padding-block:1rem 1.4rem;
-    border-top:1px solid var(--cream-line-dark);
+  /* =============================================================
+     SECTIONS
+     ============================================================= */
+  .section{
+    padding-block:clamp(3.5rem,8vw,6rem);
+    border-top:1px solid var(--line);
   }
-  .focus-head .mono{ display:flex; align-items:center; gap:.6rem; }
-  .focus-head h2{
-    color:var(--cream);
-    font-size:clamp(1.3rem,2.6vw,1.7rem);
-    font-weight:600;
-    letter-spacing:-.015em;
-    margin-top:.8rem;
+  .section-label{ display:block; margin-bottom:1.4rem; color:var(--ink-faint); }
+  .section h2{
+    max-width:20ch;
+    font-size:clamp(1.7rem,3.2vw,2.5rem);
+    font-weight:500;
+    letter-spacing:-.035em;
+    line-height:1.1;
+    text-wrap:balance;
   }
+
+  /* Focus */
   .cards{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:1.4rem;
-    padding-bottom:clamp(3rem,7vw,5rem);
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(1.5rem,3vw,2.5rem);
+    margin-top:3rem;
   }
   .card-top{
-    display:flex; align-items:center; justify-content:space-between; gap:.6rem;
-    margin-bottom:.8rem;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:1rem;
+    padding-block:.9rem 1rem;
+    border-top:1px solid var(--line-strong);
   }
-  .card-top h3{ font-size:.95rem; font-weight:600; }
-  .card-top .pill{ background:var(--cream-wash-dark); color:var(--sage); }
-  .card-img{
-    background:var(--sage-img);
-    border-radius:var(--radius);
-    overflow:hidden;
-  }
+  .card-top h3{ font-size:1rem; font-weight:600; letter-spacing:-.01em; }
+  .card-tag{ color:var(--ink-faint); white-space:nowrap; }
+  .card-img{ background:var(--surface); border-radius:var(--radius); overflow:hidden; }
   .card-img img{
     width:100%; height:300px;
     object-fit:cover;
-    mix-blend-mode:multiply;
-    filter:grayscale(1) contrast(.92) brightness(1.06);
-    opacity:.92;
+    filter:grayscale(1) contrast(1.04);
   }
-  .card p{ margin-top:1rem; font-size:.9rem; color:var(--sage); }
+  .card p{ margin-top:1.1rem; color:var(--ink-soft); font-size:.95rem; }
 
-  /* =============================================================
-     LIGHT HALF — statement, stats, writing, contact
-     ============================================================= */
-  .light{ background:var(--cream); color:var(--ink); }
-
-  .section{ padding-block:clamp(3rem,8vw,5.5rem); }
-
-  .label-pill{
-    background:var(--pine); color:var(--lime);
-    display:inline-flex;
-    padding:.35rem .9rem;
-    border-radius:var(--radius-pill);
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
-    margin-bottom:1.6rem;
-  }
-
-  /* Statement (About) */
-  .statement h2{
-    font-size:clamp(1.7rem,3.6vw,2.6rem);
-    font-weight:600;
-    letter-spacing:-.015em;
-    line-height:1.15;
-    max-width:24ch;
-    text-wrap:balance;
-  }
-  .statement .prose{ margin-top:1.8rem; max-width:60ch; }
-  .statement .prose p{
-    font-size:clamp(1.1rem,2vw,1.4rem);
-    line-height:1.4;
-    color:var(--ink-fade);
-    font-weight:500;
-  }
-  .statement .prose p + p{ margin-top:1.2rem; }
+  /* About */
   .about-grid{
     display:grid;
-    grid-template-columns:1.35fr .65fr;
-    gap:clamp(2rem,5vw,4rem);
+    grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);
+    gap:clamp(2.5rem,6vw,5rem);
     align-items:center;
   }
+  .prose{ margin-top:1.8rem; max-width:58ch; }
+  .prose p{ color:var(--ink-soft); font-size:1.05rem; line-height:1.7; }
+  .prose p + p{ margin-top:1.2rem; }
   .portrait{
     margin:0;
+    background:var(--surface);
     border-radius:var(--radius);
     overflow:hidden;
-    background:var(--sage-img);
-    box-shadow:0 22px 55px var(--pine-shadow);
   }
-  .portrait img{ width:100%; height:auto; display:block; }
+  .portrait img{ width:100%; height:auto; filter:grayscale(1) contrast(1.03); }
 
-  /* Stats band */
   .stats{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:1.4rem;
-    margin-top:3rem;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    margin-top:clamp(3rem,6vw,4.5rem);
+    border-top:1px solid var(--line-strong);
   }
-  .stat{
-    background:var(--pine);
-    border-radius:var(--radius);
-    padding:2.4rem 1.6rem 2rem;
-    text-align:center;
-  }
+  .stat{ padding:1.6rem 1.5rem 0 0; }
+  .stat + .stat{ padding-left:1.75rem; border-left:1px solid var(--line); }
   .stat .big{
-    color:var(--lime);
-    font-size:clamp(1.9rem,3.5vw,2.6rem);
-    font-weight:600;
-    letter-spacing:-.02em;
+    display:block;
+    font-size:clamp(1.7rem,3vw,2.5rem);
+    font-weight:500;
+    letter-spacing:-.035em;
+    line-height:1.15;
     font-variant-numeric:tabular-nums;
   }
-  .stat .cap{
-    display:block;
-    margin-top:1.2rem;
-    color:var(--sage);
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
-  }
+  .stat .cap{ display:block; margin-top:.6rem; color:var(--ink-faint); }
 
   /* Writing */
-  .writing h2{
-    font-size:clamp(1.6rem,3vw,2.2rem);
-    font-weight:600; letter-spacing:-.015em;
-    margin-bottom:2rem;
-  }
   .writing-empty{
-    border-top:1px solid var(--cream-line);
-    border-bottom:1px solid var(--cream-line);
-    padding-block:2rem;
+    margin-top:2.5rem;
+    padding-block:1.75rem 2rem;
+    border-top:1px solid var(--line-strong);
   }
-  .writing-empty p{ color:var(--ink-fade); font-size:1rem; max-width:48ch; }
-  .writing-empty a{
-    display:inline-flex; align-items:center; gap:.4rem;
-    margin-top:1.2rem;
-    font-weight:600; font-size:.9rem;
-    color:var(--ink);
-    border-bottom:1px solid var(--lime);
-    padding-bottom:2px;
-    transition:color .15s ease;
-  }
-  .writing-empty a:hover{ color:var(--sage-img); }
+  .writing-empty p{ max-width:48ch; color:var(--ink-soft); }
+  .writing-empty .text-link{ margin-top:1rem; }
 
-  /* Contact panel */
-  .contact-panel{
-    background:var(--pine);
-    color:var(--cream);
-    border-radius:calc(var(--radius) + 8px);
-    padding:clamp(2.2rem,5vw,3.5rem);
+  /* Contact */
+  .contact{
     display:grid;
-    grid-template-columns:1.2fr 1fr;
-    gap:2.5rem;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:clamp(2.5rem,6vw,6rem);
     align-items:start;
   }
-  .contact-panel h2{
-    font-size:clamp(1.7rem,3.4vw,2.4rem);
-    font-weight:600; letter-spacing:-.015em;
-    margin-bottom:1.2rem;
+  .contact .intro{ margin-top:1.4rem; max-width:44ch; color:var(--ink-soft); }
+  .contact-list{ border-top:1px solid var(--line-strong); }
+  .contact-row{
+    min-width:0;
+    display:grid;
+    grid-template-columns:6rem minmax(0,1fr);
+    gap:1rem;
+    align-items:center;
+    min-height:58px;
+    border-bottom:1px solid var(--line-strong);
   }
-  .contact-panel .intro{ color:var(--sage); font-size:.95rem; max-width:44ch; }
-  .channels{ list-style:none; display:flex; flex-direction:column; gap:.8rem; }
-  .channels a, .channels .static{
-    display:flex; justify-content:space-between; gap:1rem;
-    padding:.9rem 1.2rem;
-    background:var(--pine-card);
-    border-radius:12px;
-    font-size:.9rem;
+  .contact-label{ color:var(--ink-faint); }
+  .contact-row > a, .contact-row .contact-value{
+    min-width:0;
+    justify-self:end;
+    text-align:right;
+    overflow-wrap:anywhere;
   }
-  .channels a{ transition:background .15s ease; }
-  .channels a:hover{ background:var(--pine-card-hover); }
-  .channels .k{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.7rem; letter-spacing:.06em; text-transform:uppercase;
-    color:var(--sage);
-    align-self:center;
+  .contact-row > a{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    font-weight:500;
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:4px;
   }
-  .channels .email-pill{
-    background:var(--lime); color:var(--pine-deep); font-weight:600;
-  }
-  .channels .email-pill:hover{ background:var(--lime); filter:brightness(1.05); }
-  .channels .email-pill .k{ color:var(--pine-deep); opacity:.7; }
 
   /* Footer */
-  footer{
-    background:var(--pine-deep); color:var(--sage);
-    margin-top:clamp(3rem,7vw,5rem);
-  }
   .foot{
-    display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem;
-    padding-block:1.6rem;
-    font-family:"IBM Plex Mono",monospace;
-    font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
+    min-height:76px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem 2rem;
+    border-top:1px solid var(--line);
+    color:var(--ink-faint);
   }
-  .foot .name{ color:var(--cream); }
+  .foot span{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.74rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .foot .name{ color:var(--ink); }
 
   /* =============================================================
-     RESPONSIVE + MOTION
+     MOTION
      ============================================================= */
-  @media (max-width:840px){
-    .cards, .stats{ grid-template-columns:1fr; }
-    .card-img img{ height:230px; }
-    .contact-panel{ grid-template-columns:1fr; }
-    .hero-lede{ margin-left:0; }
-    .nav ul{ display:none; }
-    .about-grid{ grid-template-columns:1fr; gap:2.4rem; }
-    .about-text{ order:1; }
-    .portrait{ order:0; max-width:340px; margin-inline:auto; }
+  @media (prefers-reduced-motion:no-preference){
+    .rise{ animation:rise .6s cubic-bezier(.22,.72,.28,1) both; }
+    .r2{ animation-delay:.12s; }
+    .row-link .arrow, .contact-row a .arrow, .text-link .arrow{ transition:transform .2s ease; }
+    .row-link:hover .arrow, .row-link:focus-visible .arrow,
+    .contact-row a:hover .arrow, .contact-row a:focus-visible .arrow,
+    .text-link:hover .arrow, .text-link:focus-visible .arrow{ transform:translate(3px,-3px); }
+  }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:none; }
   }
 
-  .rise{ animation:rise .7s ease both; }
-  .r2{ animation-delay:.12s; }
-  .r3{ animation-delay:.24s; }
-  @keyframes rise{
-    from{ opacity:0; transform:translateY(14px); }
-    to{ opacity:1; transform:none; }
+  /* =============================================================
+     RESPONSIVE
+     ============================================================= */
+  @media (max-width:840px){
+    .nav ul{ display:none; }
+    .hero{ grid-template-columns:1fr; gap:3.5rem; align-items:start; }
+    .hero-copy{ justify-self:start; }
+    .cards{ grid-template-columns:1fr; }
+    .card-img img{ height:240px; }
+    .about-grid{ grid-template-columns:1fr; gap:2.5rem; }
+    .about-text{ order:1; }
+    .portrait{ order:0; max-width:340px; }
+    .stats{ grid-template-columns:1fr; }
+    .stat, .stat + .stat{ padding:1.4rem 0; border-left:0; }
+    .stat + .stat{ border-top:1px solid var(--line); }
+    .contact{ grid-template-columns:1fr; }
+  }
+  @media (max-width:480px){
+    .header-inner{ min-height:78px; }
+    .hero h1{ font-size:clamp(2.4rem,12vw,3.2rem); }
+    .contact-row{ grid-template-columns:1fr; gap:.1rem; padding-block:.75rem; }
+    .contact-row > a, .contact-row .contact-value{ justify-self:start; text-align:left; }
+    .foot{ justify-content:flex-start; }
   }
   @media (prefers-reduced-motion:reduce){
     html{ scroll-behavior:auto; }
-    .rise{ animation:none; }
     *{ transition:none !important; }
   }
 </style>
@@ -441,52 +432,51 @@
 
 <a class="skip-link" href="#main-content">Skip to content</a>
 
-<main>
-
-<!-- ============================ DARK HALF ============================ -->
-<div class="dark" id="top">
-  <div class="wrap">
-
-    <!-- EDIT #2 — your name / initials in the brand, below -->
-    <nav class="nav">
-      <a class="brand" href="#top">
-        <span class="brand-chip"><img src="logo.png" alt="" width="26" height="26"></span>
-        Dean Brickland
-      </a>
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="Dean Brickland, back to top">
+      <span class="brand-chip"><img src="logo.png" alt="" width="26" height="26"></span>
+      Dean Brickland
+    </a>
+    <nav class="nav" aria-label="Primary">
       <ul>
-        <li><a href="#about">About</a></li>
         <li><a href="#focus">Focus</a></li>
+        <li><a href="#about">About</a></li>
         <li><a href="#writing">Writing</a></li>
       </ul>
-      <a class="cta" href="#contact">&nearr; Get in touch</a>
+      <a class="cta" href="#contact">Get in touch <span class="arrow" aria-hidden="true">&nearr;</span></a>
     </nav>
+  </div>
+</header>
+
+<main id="main-content" tabindex="-1">
+  <div class="wrap">
 
     <!-- ============================ HERO ============================ -->
-    <header id="main-content" class="hero" tabindex="-1">
-      <!-- EDIT #3 — the headline. The word in green gets the accent. -->
+    <div class="hero">
+      <!-- EDIT #3 — the headline. The <em> word is underlined for emphasis. -->
       <h1 class="rise">Shaping how places grow, where policy, community and <em>economy</em> meet.</h1>
 
-      <div class="hero-actions rise r2">
-        <a class="btn" href="#contact">Get in touch</a>
-        <a class="btn-plus" href="#focus" aria-label="See my focus areas">+</a>
+      <div class="hero-copy rise r2">
+        <!-- EDIT #4 — one or two sentences about you -->
+        <p>I'm a town planner working in Irish local government and professional practice, with a focus on local economic development and the regeneration of towns and communities.</p>
+        <div class="row-list">
+          <a class="row-link" href="#contact"><span>Get in touch</span><span class="arrow" aria-hidden="true">&nearr;</span></a>
+          <a class="row-link" href="#focus"><span>See my focus areas</span><span class="arrow" aria-hidden="true">&darr;</span></a>
+        </div>
       </div>
-
-      <!-- EDIT #4 — one or two sentences about you -->
-      <p class="hero-lede rise r3">I'm a town planner working in Irish local government and professional practice, with a focus on local economic development and the regeneration of towns and communities.</p>
-    </header>
+    </div>
 
     <!-- ============================ FOCUS ============================ -->
     <!-- EDIT #5 — your three focus areas -->
-    <section id="focus">
-      <div class="focus-head">
-        <span class="mono">&#8982; Focus</span>
-        <h2>Three things I work on.</h2>
-      </div>
+    <section id="focus" class="section">
+      <span class="section-label mono">A / Focus</span>
+      <h2>Three things I work on.</h2>
       <div class="cards">
         <div class="card">
           <div class="card-top">
             <h3>Development plans</h3>
-            <span class="pill">Policy</span>
+            <span class="card-tag mono">Policy</span>
           </div>
           <div class="card-img"><img src="card-photo-1.webp" alt="A station concourse with wayfinding signage and passengers walking through" width="1200" height="750" loading="lazy"></div>
           <p>Drafting and reviewing statutory spatial policy, from the evidence base through to the objectives that guide how land is used.</p>
@@ -494,7 +484,7 @@
         <div class="card">
           <div class="card-top">
             <h3>Economy &amp; regeneration</h3>
-            <span class="pill">Economy</span>
+            <span class="card-tag mono">Economy</span>
           </div>
           <div class="card-img"><img src="card-photo-2.webp" alt="A station platform with an intercity train and passengers, retail units visible above" width="1200" height="960" loading="lazy"></div>
           <p>How planning can support local economic development and the regeneration of towns, so growth reaches the communities that need it most.</p>
@@ -502,7 +492,7 @@
         <div class="card">
           <div class="card-top">
             <h3>Profession &amp; education</h3>
-            <span class="pill">Practice</span>
+            <span class="card-tag mono">Practice</span>
           </div>
           <div class="card-img"><img src="card-photo-3.webp" alt="An elevated view inside a multi-level station, with an intercity train passing below" width="1200" height="960" loading="lazy"></div>
           <p>Supporting standards and continuing education across the planning profession, so practice keeps pace with the questions it faces.</p>
@@ -510,19 +500,12 @@
       </div>
     </section>
 
-  </div>
-</div>
-
-<!-- ============================ LIGHT HALF ============================ -->
-<div class="light">
-  <div class="wrap">
-
     <!-- ============================ ABOUT ============================ -->
     <!-- EDIT #6 — your about text -->
-    <section id="about" class="section statement">
+    <section id="about" class="section">
       <div class="about-grid">
         <div class="about-text">
-          <span class="label-pill">A / About</span>
+          <span class="section-label mono">B / About</span>
           <h2>Between the plan and the decision.</h2>
           <div class="prose">
             <p>My work sits where statutory policy meets the places people actually live in. I spend my days on development plans, the evidence behind them, and the long process of turning a strategy into something a community can recognise on the ground.</p>
@@ -534,54 +517,61 @@
         </figure>
       </div>
 
-      <!-- EDIT #7 — the three stat cards. -->
+      <!-- EDIT #7 — the three stats. -->
       <div class="stats">
         <div class="stat">
           <span class="big">Director</span>
-          <span class="cap">Irish Planning Institute</span>
+          <span class="cap mono">Irish Planning Institute</span>
         </div>
         <div class="stat">
           <span class="big">Dublin, IE</span>
-          <span class="cap">Base of practice</span>
+          <span class="cap mono">Base of practice</span>
         </div>
         <div class="stat">
           <span class="big">5+</span>
-          <span class="cap">Years of experience</span>
+          <span class="cap mono">Years of experience</span>
         </div>
       </div>
     </section>
 
     <!-- ============================ WRITING ============================ -->
-    <!-- EDIT #8 — replace with real posts/links, or delete this section.
-         Each row: date · title · type. Point href at your article. -->
-    <section id="writing" class="section writing">
-      <span class="label-pill">B / Writing</span>
+    <!-- EDIT #8 — replace with real posts/links, or delete this section. -->
+    <section id="writing" class="section">
+      <span class="section-label mono">C / Writing</span>
       <h2>Notes &amp; writing.</h2>
       <div class="writing-empty">
         <p>The first essays are still in progress. In the meantime, the quickest way to keep up is on LinkedIn.</p>
-        <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener">Follow on LinkedIn &rarr;</a>
+        <a class="text-link" href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span>Follow on LinkedIn</span><span class="arrow" aria-hidden="true">&nearr;</span></a>
       </div>
     </section>
 
     <!-- ============================ CONTACT ============================ -->
     <!-- EDIT #9 — your real email and links -->
     <section id="contact" class="section">
-      <div class="contact-panel">
+      <div class="contact">
         <div>
+          <span class="section-label mono">D / Contact</span>
           <h2>Get in touch.</h2>
           <p class="intro">Open to conversations about planning practice, spatial policy, and local economic development in the public sector. The quickest way to reach me is by email.</p>
         </div>
-        <ul class="channels">
-          <li><a class="email-pill" id="email-link" href="#contact"><span class="k">Email</span><span id="email-text" aria-live="polite">Show address</span></a></li>
-          <li><a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span>/in/dean-brickland</span></a></li>
-          <li><div class="static"><span class="k">Location</span><span>Dublin, Ireland</span></div></li>
-        </ul>
+        <div class="contact-list">
+          <div class="contact-row">
+            <span class="contact-label mono">Email</span>
+            <a id="email-link" href="#contact"><span id="email-text" aria-live="polite">Show address</span><span class="arrow" aria-hidden="true">&nearr;</span></a>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label mono">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span>/in/dean-brickland</span><span class="arrow" aria-hidden="true">&nearr;</span></a>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label mono">Location</span>
+            <span class="contact-value">Dublin, Ireland</span>
+          </div>
+        </div>
       </div>
     </section>
 
   </div>
-</div>
-
 </main>
 
 <!-- ============================ FOOTER ============================ -->

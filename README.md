@@ -72,8 +72,8 @@ is no staging step and no build to wait on. See
 | `favicon.png` | Browser tab icon |
 | `logo.png` | "DB" monogram mark, used in the nav and 404 page |
 | `portrait.webp` | Headshot, used in the About section |
-| `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image) |
-| `card-photo-1.webp`, `card-photo-2.webp`, `card-photo-3.webp` | Dean's own station photographs, cropped for the three focus cards (the pine tint is applied in CSS, not baked in). The earlier site-plan crops are preserved in the `concept/pine-original` tag |
+| `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image), in the white/charcoal style |
+| `card-photo-1.webp`, `card-photo-2.webp`, `card-photo-3.webp` | Dean's own station photographs, cropped for the three focus cards (the greyscale treatment is applied in CSS, not baked in). The earlier site-plan crops are preserved in the `concept/pine-original` tag |
 
 The page also carries `Person`/`ProfilePage` JSON-LD structured data
 and Open Graph/Twitter Card meta tags for search and social previews
