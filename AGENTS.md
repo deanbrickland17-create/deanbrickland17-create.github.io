@@ -38,10 +38,11 @@ Rules:
   article titles/links, credentials, or employer details. If a piece
   of content needs a real fact you don't have, leave it as a visible
   placeholder or ask, rather than writing something plausible-sounding.
-- **The three "Writing" entries are currently placeholders** with
-  `href="#"`. Don't invent article content for them. Either wire them
-  to real URLs once supplied, or restructure the section (e.g. link
-  out to LinkedIn) rather than leave dead links live.
+- **The Writing section currently has no articles.** It shows an honest
+  "first essays are still in progress" note with a LinkedIn link. Don't
+  invent article titles, dates or content to fill it. When Dean supplies
+  a real piece, add it as a real entry with a working link; never add
+  an entry that points at `#`.
 - Settled word choices — don't silently revert these:
   - "town planner", not "spatial planner"
   - "economy" / "local economic development", not "technology" (the
@@ -111,6 +112,11 @@ lowercase Helvetica, blue-cast imagery) is archived at the
   convention here, on purpose, for a page this size.
 - Preserve the responsive breakpoints (`840px`, `480px`) and the
   `prefers-reduced-motion` handling already in place.
+- **No third-party requests.** Fonts are self-hosted in `fonts/` (two
+  Latin-subset WOFF2 files plus their OFL licence texts). Don't add a
+  Google Fonts, CDN or analytics link: it would send every visitor's IP
+  address to another company. If a new font is needed, download it into
+  `fonts/` with its licence file and add a `@font-face` rule.
 - Any new branch should fork from `draft` (which carries the current
   content/SEO/anti-scraping baseline), not from `main`.
 - **`404.html` has its own inline `<style>` block and does not share

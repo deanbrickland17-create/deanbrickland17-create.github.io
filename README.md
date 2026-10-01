@@ -69,6 +69,7 @@ is no staging step and no build to wait on. See
 | `robots.txt` | Crawler rules — explicitly allows major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) |
 | `sitemap.xml` | Single-page sitemap |
 | `llms.txt` | Plain-text site summary for LLMs that check this convention |
+| `fonts/` | Self-hosted Archivo and IBM Plex Mono (Latin-subset WOFF2) with their SIL OFL licence texts. The site makes no third-party requests |
 | `favicon.png` | Browser tab icon |
 | `logo.png` | "DB" monogram mark, used in the nav and 404 page |
 | `portrait.webp` | Headshot, used in the About section |
