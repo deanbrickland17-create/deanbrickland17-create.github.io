@@ -24,8 +24,12 @@ Rules:
 - The original visual directions are preserved as
   `concept/pine-original` and `concept/softclub-original` tags. Use
   those tags for reference; do not recreate long-lived style branches.
-- `claude/personal-finance-tracker-ke5kgk` contains separate finance
-  tracker work and is not part of the website branch strategy.
+- This repo holds the website and nothing else. Dean's other projects
+  have their own repos (the finance tracker lives in `Financial-Tracker`).
+  If a session has been opened in the wrong repo, stop: don't push
+  unrelated work here. A `claude/*` or other stray branch whose changes
+  have nothing to do with the website was pushed to the wrong repo. Tell
+  Dean it can be deleted; don't document it as something to "retain".
 - If you're unsure whether the site is currently meant to be live or
   not, ask. Don't infer it from the state of the branch.
 - If you discover the site republished unexpectedly, the cause is

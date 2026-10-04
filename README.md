@@ -18,10 +18,10 @@ approval.
 | `draft` | Canonical development branch for the personal website |
 | `concept/pine-original` | Tag preserving the original pine/cream/lime design |
 | `concept/softclub-original` | Tag preserving the original Soft Club design |
-| `claude/personal-finance-tracker-ke5kgk` | Separate finance-tracker work, retained because it contains substantive content |
 
 The design tags are reference snapshots, not active development
-branches. New website work should start from `draft`.
+branches. New website work should start from `draft`. Any other
+branch is temporary and should be deleted once its work is merged.
 
 ## Stack
 
