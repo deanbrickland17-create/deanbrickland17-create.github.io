@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Whose machine is it running on? Open-weight AI and the Irish planning office — Dean Brickland</title>
+<meta name="description" content="Irish councils are adopting generative AI mostly through Microsoft Copilot. For planning departments, which hold some of the most personal data in local government, open-weight models on public infrastructure deserve a serious look.">
+<link rel="canonical" href="https://deanbrickland.com/writing/open-weight-ai-planning.html">
+<link rel="icon" type="image/png" href="/favicon.png">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Dean Brickland">
+<meta property="og:title" content="Whose machine is it running on? Open-weight AI and the Irish planning office">
+<meta property="og:description" content="Open-weight AI, Microsoft Copilot, GDPR and data control in Irish local authority planning departments.">
+<meta property="og:url" content="https://deanbrickland.com/writing/open-weight-ai-planning.html">
+<meta property="og:image" content="https://deanbrickland.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dean Brickland — Town Planner, Dublin. Local economic development and regeneration. Director, Irish Planning Institute.">
+<meta property="article:published_time" content="2026-10-09">
+<meta property="article:author" content="https://deanbrickland.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Whose machine is it running on? Open-weight AI and the Irish planning office">
+<meta name="twitter:description" content="Open-weight AI, Microsoft Copilot, GDPR and data control in Irish local authority planning departments.">
+<meta name="twitter:image" content="https://deanbrickland.com/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Whose machine is it running on? Open-weight AI and the Irish planning office",
+  "description": "Open-weight AI, Microsoft Copilot, GDPR and data control in Irish local authority planning departments.",
+  "datePublished": "2026-10-09",
+  "inLanguage": "en-IE",
+  "url": "https://deanbrickland.com/writing/open-weight-ai-planning.html",
+  "mainEntityOfPage": "https://deanbrickland.com/writing/open-weight-ai-planning.html",
+  "image": "https://deanbrickland.com/og-image.png",
+  "author": {
+    "@type": "Person",
+    "name": "Dean Brickland",
+    "url": "https://deanbrickland.com/"
+  },
+  "keywords": ["Open-weight AI", "Microsoft Copilot", "GDPR", "Local government", "Planning", "Ireland"]
+}
+</script>
+
+<link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+  /* Fonts are self-hosted (see fonts/README.txt): no third-party requests. */
+  @font-face{
+    font-family:"Archivo";
+    font-style:normal;
+    font-weight:400 600;
+    font-stretch:100%;
+    font-display:swap;
+    src:url("/fonts/archivo-latin.woff2") format("woff2");
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face{
+    font-family:"IBM Plex Mono";
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url("/fonts/ibm-plex-mono-400-latin.woff2") format("woff2");
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Same tokens as index.html. Article pages keep their own small
+     <style> block, like 404.html -- update by hand if the palette changes. */
+  :root{
+    --paper:#FFFFFF;
+    --ink:#202124;
+    --ink-soft:#606369;
+    --ink-faint:#6B6E74;
+    --line:#E1E2E4;
+    --line-strong:#C9CBCF;
+    --radius:3px;
+    --max-width:1180px;
+    --measure:42rem;
+    --gutter:clamp(1.25rem,4vw,2.75rem);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    min-width:280px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  a:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; border-radius:2px; }
+
+  .skip-link{
+    position:fixed;
+    top:.75rem; left:.75rem;
+    z-index:10;
+    transform:translateY(-160%);
+    background:var(--ink);
+    color:var(--paper);
+    padding:.7rem 1rem;
+    font-size:.875rem;
+    font-weight:600;
+    text-decoration:none;
+  }
+  .skip-link:focus{ transform:none; }
+
+  .wrap{
+    width:min(100%,calc(var(--max-width) + (var(--gutter) * 2)));
+    margin-inline:auto;
+    padding-inline:var(--gutter);
+  }
+  .mono{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    line-height:1.4;
+    text-transform:uppercase;
+  }
+  .arrow{ font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+
+  /* Header */
+  .site-header{ border-bottom:1px solid var(--line); }
+  .header-inner{
+    min-height:88px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:2rem;
+  }
+  .brand{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:.75rem;
+    font-size:.98rem;
+    font-weight:600;
+    text-decoration:none;
+  }
+  .brand-chip{
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    padding:4px;
+    background:var(--paper);
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+  }
+  .brand-chip img{ width:100%; height:100%; object-fit:contain; }
+  .back{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    font-size:.9rem;
+    font-weight:500;
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:5px;
+  }
+
+  main:focus{ outline:none; }
+
+  /* Article */
+  .article{ max-width:var(--measure); padding-block:clamp(3.5rem,9vw,6.5rem) clamp(3rem,7vw,5rem); }
+  .article-label{ display:block; margin-bottom:1.4rem; color:var(--ink-faint); }
+  .article h1{
+    font-size:clamp(2.1rem,5vw,3.4rem);
+    font-weight:500;
+    letter-spacing:-.04em;
+    line-height:1.05;
+    text-wrap:balance;
+  }
+  .standfirst{
+    margin-top:1.6rem;
+    color:var(--ink-soft);
+    font-size:clamp(1.08rem,1.6vw,1.22rem);
+    line-height:1.55;
+  }
+  .byline{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem 1.5rem;
+    margin-top:2.2rem;
+    padding-block:1rem;
+    border-block:1px solid var(--line-strong);
+    color:var(--ink-faint);
+  }
+  .byline .name{ color:var(--ink); }
+
+  .body{ margin-top:2.6rem; }
+  .body h2{
+    margin-top:3rem;
+    font-size:clamp(1.3rem,2.4vw,1.6rem);
+    font-weight:500;
+    letter-spacing:-.025em;
+    line-height:1.2;
+  }
+  .body p, .body li{ font-size:1.06rem; line-height:1.75; color:var(--ink); }
+  .body h2 + p{ margin-top:1rem; }
+  .body p + p{ margin-top:1.25rem; }
+  .body ul{ margin-top:1.25rem; padding-left:1.2rem; }
+  .body li + li{ margin-top:.8rem; }
+  .body li::marker{ color:var(--ink-faint); }
+  .body strong{ font-weight:600; }
+  .body em{ font-style:italic; }
+
+  .note{
+    margin-top:3.2rem;
+    padding-top:1.4rem;
+    border-top:1px solid var(--line-strong);
+    color:var(--ink-soft);
+    font-size:.95rem;
+  }
+
+  .sources{ margin-top:2.6rem; }
+  .sources h2{ margin-bottom:1rem; color:var(--ink-faint); font-weight:400; }
+  .sources ol{ padding-left:2rem; border-top:1px solid var(--line); }
+  .sources li{
+    padding-block:.65rem;
+    border-bottom:1px solid var(--line);
+    color:var(--ink-soft);
+    font-size:.9rem;
+    line-height:1.5;
+    overflow-wrap:anywhere;
+  }
+  .sources li::marker{ font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.8rem; color:var(--ink-faint); }
+  .sources a{ color:var(--ink); text-decoration-thickness:1px; text-underline-offset:3px; }
+
+  /* Footer */
+  .foot{
+    min-height:76px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem 2rem;
+    border-top:1px solid var(--line);
+    color:var(--ink-faint);
+  }
+  .foot span{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.74rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .foot .name{ color:var(--ink); }
+
+  @media (prefers-reduced-motion:no-preference){
+    .back .arrow{ transition:transform .2s ease; }
+    .back:hover .arrow, .back:focus-visible .arrow{ transform:translateX(-3px); }
+  }
+  @media (max-width:480px){
+    .header-inner{ min-height:78px; gap:1rem; }
+    .body p, .body li{ font-size:1.02rem; }
+    .foot{ justify-content:flex-start; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/" aria-label="Dean Brickland, homepage">
+      <span class="brand-chip"><img src="/logo.png" alt="" width="26" height="26"></span>
+      Dean Brickland
+    </a>
+    <a class="back" href="/#writing"><span class="arrow" aria-hidden="true">&larr;</span><span>All writing</span></a>
+  </div>
+</header>
+
+<main id="main-content" tabindex="-1">
+  <div class="wrap">
+    <article class="article">
+      <span class="article-label mono">Essay / AI &amp; local government</span>
+      <h1>Whose machine is it running on?</h1>
+      <p class="standfirst">Irish councils are adopting generative AI mostly through Microsoft Copilot. For planning departments, which hold some of the most personal data in local government, open-weight models running on infrastructure the public sector controls deserve a serious look.</p>
+      <div class="byline mono">
+        <span class="name">Dean Brickland</span>
+        <span><time datetime="2026-10-09">9 October 2026</time></span>
+        <span>8 min read</span>
+      </div>
+
+      <div class="body">
+        <p>Every planning department in Ireland already has a generative AI policy, whether or not anyone has written it down. If the council does not provide a sanctioned tool, staff under pressure will find an unsanctioned one, and the observations, enforcement complaints and draft reports that pass through a planning office will end up pasted into a free chatbot somewhere. The Government’s <em>Guidelines for the Responsible Use of AI in the Public Service</em>, published in May 2025, recognise the risk: they advise public bodies against free generative AI tools and expect any use to rest on an approved business case.</p>
+        <p>So the question for councils is not whether to adopt AI but which kind, and on whose terms. In practice the default answer is Microsoft Copilot, because councils already run on Microsoft 365. Dublin City Council, for example, held seven Copilot licences by June 2025, at a cost of just over €19,000, according to records released under Freedom of Information. That default is reasonable. My argument is that for planning work it should not be the only answer, and that open-weight models, which can be downloaded and run on infrastructure the council or the sector controls, deserve a place in the plan.</p>
+
+        <h2>Why planning is different</h2>
+        <p>Planning departments hold an unusual mix of data. Much of what we work with is public by design: development plans, ministerial guidelines, the National Planning Framework, decisions and inspectors’ reports. Any reputable tool can safely be pointed at that material, and many of the most useful early applications, such as searching policy, checking a proposal against a plan’s objectives or summarising a long circular, need nothing more.</p>
+        <p>But the planning file is also full of personal data. Every application carries names and addresses, and sometimes details of a person’s health or finances offered in support of a case. Every observation on an application and every submission on a development plan comes from an identifiable person. Enforcement files contain complaints about neighbours. This is exactly where AI could save the most time. Analysing thousands of development plan submissions is slow, repetitive work on a statutory clock. In England, a tool called PlanAI, built by Greater Cambridge Shared Planning and the University of Liverpool, cut the time taken to analyse one set of consultation responses from around 18.5 hours to about 16 minutes, and five more planning authorities have since tested it.</p>
+        <p>Here a familiar safeguard breaks down. Many AI pilot proposals deal with data protection by banning personal data from the tool altogether. That is a sensible rule for a first trial, but in planning it rules out the most valuable work. A department that wants AI to help with submissions has to decide where personal data will be processed, by whom, and under which legal regime. That is a question about infrastructure as much as software.</p>
+
+        <h2>What Copilot offers</h2>
+        <p>Copilot deserves a fair hearing. It works inside Outlook, Word, Teams and SharePoint, where council staff already spend their day. Microsoft acts as a data processor under contract, says that customer prompts and business data are not used to train its foundation models, and has spent several years building an EU Data Boundary so that customer data is stored and processed within the EU. Copilot inherits the council’s existing permissions, security and records tools. The council gets a working product without running any infrastructure, and there is a large market of suppliers who can support it.</p>
+        <p>There are three things a planning department should look at carefully.</p>
+        <p><strong>Data location is a setting, not a guarantee.</strong> In April 2026 Microsoft began enabling “flex routing”, under which Copilot’s model processing for EU customers can run outside the EU Data Boundary during periods of peak demand, while stored data stays in the EU. It can be switched off in the admin centre, and the defaults appear to differ between types of customer. But it shows how a supplier’s architecture can shift under a council’s feet, and why an assurance given at procurement needs checking afterwards.</p>
+        <p><strong>Jurisdiction.</strong> Microsoft is a US company, and transfers of personal data to the United States currently rest on the EU–US Data Privacy Framework. The EU General Court upheld that framework in September 2025, but the decision is under appeal to the Court of Justice, which struck down its two predecessors, Safe Harbor and Privacy Shield, in 2015 and 2020. A council building core processes on a US platform is relying on the framework surviving, and on the provider’s contractual commitments about government access requests.</p>
+        <p><strong>Transparency.</strong> A data protection impact assessment for the Dutch government, published in December 2024, identified four high risks in Microsoft 365 Copilot, including the transparency of the diagnostic data it collects. After negotiations with Microsoft, the Dutch education body SURF reported in September 2025 that two of the four had been reduced to medium, and Microsoft has since said all four have been mitigated or reduced. That is progress, but it took a national government’s negotiating weight to get there, and no individual Irish council has that leverage. There is also a practical risk that gets less attention: Copilot can see whatever the user can see. In an organisation where SharePoint permissions have grown untidy over a decade, it will surface documents nobody realised were widely shared.</p>
+
+        <h2>What open-weight models offer</h2>
+        <p>Open-weight models, including Mistral’s models released under the Apache 2.0 licence, Meta’s Llama family and the fully open OLMo models, can be downloaded and run on servers the council chooses. A word on terms: most of these are not “open source” in the full sense defined by the Open Source Initiative, because their training data is not published, and some licences, Llama’s among them, carry usage restrictions. The licence matters and must be read. But the defining property is simple: the model runs where you put it.</p>
+        <p>For a planning department, that changes the data protection picture. If a model runs on hardware in an Irish data centre, operated by or for the public sector, submissions and planning files never leave infrastructure under public control. There is no third-country transfer to justify, no supplier routing decision to monitor and no usage data going back to a model provider. The council can log every prompt and output, which matters for accountability and for Freedom of Information, since AI-assisted records are still records. Costs are predictable, hardware and staff rather than a per-user licence; the full Microsoft 365 Copilot lists at about US$30 per user per month. And the model cannot be withdrawn, repriced or changed by a supplier halfway through a development plan review.</p>
+        <p>Open-weight models are not a free pass. A council running its own model becomes responsible for security, updates, capacity and evaluation. The best open models have closed much of the gap with commercial systems but still trail them on some tasks, and the integration Copilot provides out of the box would have to be built. GDPR does not go away either. The European Data Protection Board’s Opinion 28/2024, issued at the request of the Irish Data Protection Commission, says that unlawful processing when a model was trained can affect the lawfulness of using it later. A model’s provenance is a procurement question, not only a technical one.</p>
+
+        <h2>A shared service, not 31 experiments</h2>
+        <p>No single council should be expected to do this alone, and that is the strongest argument for treating open-weight AI as shared infrastructure for local government. The sector has done this before. The LGMA leads the national online planning system for local authorities, and the <em>Local Government Digital and ICT Strategy 2030</em>, launched in July 2024, already treats data as a shared asset. A centrally hosted service running vetted open-weight models, with tools built for the tasks planners actually do, such as submission analysis, policy search and scaffolding for reports, would give every planning authority the same capability under the same governance, at a fraction of what each would spend alone. Dublin City Council’s GenAI Lab with Trinity College Dublin and the ADAPT centre shows that the research capacity to help design it already exists in Ireland.</p>
+
+        <h2>Rules for either route</h2>
+        <p>Whichever route a council takes, the same principles apply.</p>
+        <ul>
+          <li><strong>Classify before you choose.</strong> Public documents, personal data from the planning process and sensitive files such as enforcement cases and legal advice carry different risks, and may justify different tools.</li>
+          <li><strong>Assess each use, not “AI”.</strong> A data protection impact assessment for submission analysis tells you something; one for “Copilot” tells you very little.</li>
+          <li><strong>Keep the decision human.</strong> A planning decision has legal effects for the applicant and for third parties, and GDPR limits solely automated decisions of that kind. AI can summarise the submissions or assemble the planning history; the professional judgement in the planner’s report has to stay the planner’s.</li>
+          <li><strong>Plan for the AI Act.</strong> The EU’s Digital Omnibus has pushed the main high-risk obligations back to December 2027, but the transparency duties apply from August 2026, and Ireland is building a national enforcement system around a new AI Office. Most of the uses described here are unlikely to be classed as high-risk. Anything that comes close to assessing an application should be treated as if it were.</li>
+          <li><strong>Publish what you use.</strong> A public register of the AI tools used in the planning system, and what each is used for, would do more for public trust than any supplier’s assurance.</li>
+        </ul>
+
+        <h2>The question to ask</h2>
+        <p>Copilot is a sensible tool for the general office work every council department does, and most councils will use it. But planning departments hold the personal data of everyone who has applied for permission or objected to a neighbour’s extension, and public trust in the system depends on that data being handled with care. For that work, the most useful question to ask of any AI tool is a plain one: whose machine is it running on? Open-weight models on public infrastructure are the only option where the answer is “ours”. Irish local government should start building that option now, while the market is still deciding what it wants to be.</p>
+
+        <p class="note">This is a personal view. It does not represent the position of any organisation I work with, including the Irish Planning Institute, and it is not legal advice.</p>
+      </div>
+
+      <section class="sources" aria-labelledby="sources-heading">
+        <h2 id="sources-heading" class="mono">Sources</h2>
+        <ol>
+          <li>Department of Public Expenditure, Infrastructure, Public Service Reform and Digitalisation, <a href="https://www.gov.ie/en/department-of-public-expenditure-infrastructure-public-service-reform-and-digitalisation/publications/guidelines-for-the-responsible-use-of-ai-in-the-public-service/" target="_blank" rel="noopener">Guidelines for the Responsible Use of AI in the Public Service</a> (May 2025).</li>
+          <li>Dublin Inquirer, <a href="https://www.dublininquirer.com/while-council-staff-are-barred-from-using-free-ai-chatbots-councillors-are-trained-on-them/" target="_blank" rel="noopener">While council staff are barred from using free AI chatbots, councillors are trained on them</a>.</li>
+          <li>MHCLG Digital, <a href="https://mhclgdigital.blog.gov.uk/2026/07/30/using-ai-to-support-faster-local-plan-consultation-analysis/" target="_blank" rel="noopener">Using AI to support faster local plan consultation analysis</a> (July 2026).</li>
+          <li>Schneider IT Management, <a href="https://www.schneider.im/microsoft-365-copilot-flex-routing-data-can-move-outside-the-eu/" target="_blank" rel="noopener">Microsoft 365 Copilot flex routing: data can move outside the EU</a> (April 2026).</li>
+          <li>IAPP, <a href="https://iapp.org/news/a/european-general-court-dismisses-latombe-challenge-upholds-eu-us-data-privacy-framework" target="_blank" rel="noopener">European General Court dismisses Latombe challenge, upholds EU-US Data Privacy Framework</a> (September 2025); WilmerHale, <a href="https://www.wilmerhale.com/en/insights/blogs/wilmerhale-privacy-and-cybersecurity-law/20251201-european-court-of-justice-to-review-challenge-to-eu-us-data-privacy-framework" target="_blank" rel="noopener">European Court of Justice to review challenge to EU-U.S. Data Privacy Framework</a> (December 2025).</li>
+          <li>PPC Land, <a href="https://ppc.land/surf-downgrades-microsoft-copilot-education-risks-to-medium-while-privacy-concerns-persist/" target="_blank" rel="noopener">SURF downgrades Microsoft Copilot education risks to medium while privacy concerns persist</a> (September 2025).</li>
+          <li>Open Source Initiative, <a href="https://opensource.org/ai/open-source-ai-definition" target="_blank" rel="noopener">The Open Source AI Definition 1.0</a>; Mistral AI, <a href="https://help.mistral.ai/en/articles/347393-under-which-license-are-mistral-s-open-models-available" target="_blank" rel="noopener">Under which licence are Mistral’s open models available?</a></li>
+          <li>Matheson, <a href="https://www.matheson.com/insights/edpb-publishes-eagerly-anticipated-opinion-on-ai-models/" target="_blank" rel="noopener">EDPB publishes eagerly anticipated opinion on AI models</a> (December 2024).</li>
+          <li>LGMA, <a href="https://www.lgma.ie/en/news/online-planning-live-in-12-local-authorities.html" target="_blank" rel="noopener">Online planning live in 12 local authorities</a>; gov.ie, <a href="https://www.gov.ie/en/department-of-public-expenditure-infrastructure-public-service-reform-and-digitalisation/publications/local-government-digital-and-ict-strategy-2030-launched/" target="_blank" rel="noopener">Local Government Digital and ICT Strategy 2030 launched</a> (July 2024).</li>
+          <li>Chartered ABS, <a href="https://charteredabs.org/insights/impact-case-studies/bringing-ai-to-local-government-genai-lab-to-support-dublin-city-council" target="_blank" rel="noopener">Bringing AI to local government: GenAI Lab to support Dublin City Council</a>.</li>
+          <li>White &amp; Case, <a href="https://www.whitecase.com/insight-alert/eu-agrees-digital-omnibus-deal-simplify-ai-rules" target="_blank" rel="noopener">EU agrees Digital Omnibus deal to simplify AI rules</a> (2026); Matheson, <a href="https://www.matheson.com/insights/irish-government-publishes-regulation-of-artificial-intelligence-bill-2026/" target="_blank" rel="noopener">Irish Government publishes Regulation of Artificial Intelligence Bill 2026</a>.</li>
+        </ol>
+      </section>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="name">Dean Brickland MIPI</span>
+    <span>Town Planner</span>
+    <span>Dublin, IE</span>
+    <span>&copy; <span id="yr">2026</span></span>
+  </div>
+</footer>
+
+<script>
+  // Fills the current year in the footer. Harmless if it fails.
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

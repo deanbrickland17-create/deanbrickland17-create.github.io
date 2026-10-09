@@ -42,11 +42,13 @@ Rules:
   article titles/links, credentials, or employer details. If a piece
   of content needs a real fact you don't have, leave it as a visible
   placeholder or ask, rather than writing something plausible-sounding.
-- **The Writing section currently has no articles.** It shows an honest
-  "first essays are still in progress" note with a LinkedIn link. Don't
-  invent article titles, dates or content to fill it. When Dean supplies
-  a real piece, add it as a real entry with a working link; never add
-  an entry that points at `#`.
+- **Writing lives in `writing/`, one standalone HTML page per essay**,
+  listed newest-first in the Writing section of `index.html` and in
+  `sitemap.xml` and `llms.txt`. Only publish pieces Dean has approved.
+  Don't invent article titles, dates or content, and never add an entry
+  that points at `#`. Article pages carry their own `<style>` block
+  (like `404.html`) and use root-absolute asset paths (`/fonts/...`).
+  Factual claims in an essay link to a source in its Sources list.
 - Settled word choices — don't silently revert these:
   - "town planner", not "spatial planner"
   - "economy" / "local economic development", not "technology" (the

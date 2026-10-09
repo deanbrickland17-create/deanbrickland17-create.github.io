@@ -12,6 +12,10 @@ Dean's work sits where statutory policy meets the places people actually live in
 - **Economy & regeneration** — how planning can support local economic development and the regeneration of towns, so growth reaches the communities that need it most.
 - **Profession & education** — supporting standards and continuing education across the planning profession.
 
+## Writing
+
+- [Whose machine is it running on? Open-weight AI and the Irish planning office](https://deanbrickland.com/writing/open-weight-ai-planning.html) (9 October 2026) — compares Microsoft Copilot with open-weight AI models run on public infrastructure for Irish local authority planning departments, focusing on data control, GDPR and the EU AI Act.
+
 ## Contact
 
 - Email: available via the contact section at https://deanbrickland.com/#contact

@@ -65,9 +65,10 @@ is no staging step and no build to wait on. See
 |---|---|
 | `index.html` | The entire site |
 | `404.html` | Custom not-found page, auto-served by GitHub Pages |
+| `writing/` | One standalone page per essay, listed in the Writing section |
 | `CNAME` | Custom domain config for GitHub Pages |
 | `robots.txt` | Crawler rules — explicitly allows major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) |
-| `sitemap.xml` | Single-page sitemap |
+| `sitemap.xml` | Sitemap: homepage plus each essay |
 | `llms.txt` | Plain-text site summary for LLMs that check this convention |
 | `fonts/` | Self-hosted Archivo and IBM Plex Mono (Latin-subset WOFF2) with their SIL OFL licence texts. The site makes no third-party requests |
 | `favicon.png` | Browser tab icon |

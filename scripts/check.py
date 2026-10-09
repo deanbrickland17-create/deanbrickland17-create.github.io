@@ -21,7 +21,7 @@ Checks:
     Skipped automatically when the sandbox has no outbound access.
 
 Usage:
-    python3 scripts/check.py            # check all *.html at repo root
+    python3 scripts/check.py            # check every *.html in the repo (root and subfolders like writing/)
     python3 scripts/check.py index.html # check a specific file
     python3 scripts/check.py --no-network
 """
@@ -267,11 +267,12 @@ def main():
     if args:
         targets = [os.path.join(REPO_ROOT, a) for a in args]
     else:
-        targets = [
-            os.path.join(REPO_ROOT, f)
-            for f in sorted(os.listdir(REPO_ROOT))
-            if f.endswith(".html")
-        ]
+        targets = []
+        for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
+            dirnames[:] = sorted(d for d in dirnames if not d.startswith("."))
+            targets.extend(
+                os.path.join(dirpath, f) for f in sorted(filenames) if f.endswith(".html")
+            )
 
     domains = read_cname_domains()
     errors, warnings = [], []
