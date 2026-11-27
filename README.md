@@ -1,19 +1,27 @@
 # deanbrickland.com
 
 Personal website for Dean Brickland — town planner, Director at the
-Irish Planning Institute. Single-page static site, no build step.
+Irish Planning Institute. Static HTML/CSS/JS site, no build step.
 
 ## Status
 
-**`main`'s `index.html` is currently a placeholder holding page**
-("New site coming soon", pine-styled), not the real site. This is
-intentional: the site is public/publishable, but the full build isn't
-shown yet. The actual, finished site lives on `draft` (and the
-alternate visual direction on `style-softclub`) — don't mistake the
-placeholder for a regression or lost work when reading `main`.
-`main` is whatever branch GitHub Pages is configured to deploy from
-(Settings → Pages) — treat any push to it as an instruction to change
-what's publicly live right now, not routine development.
+The custom domain is live, and `main` currently serves an intentional
+"New site coming soon" holding page in the white/charcoal editorial
+style. The full personal site and writing live on `draft` and must not
+be published without explicit approval.
+
+## Branches
+
+| Ref | Purpose |
+|---|---|
+| `main` | Production-only GitHub Pages source; currently the holding page |
+| `draft` | Canonical development branch for the personal website |
+| `concept/pine-original` | Tag preserving the original pine/cream/lime design |
+| `concept/softclub-original` | Tag preserving the original Soft Club design |
+
+The design tags are reference snapshots, not active development
+branches. New website work should start from `draft`. Any other
+branch is temporary and should be deleted once its work is merged.
 
 ## Stack
 
@@ -32,10 +40,9 @@ there's nothing to build.
 
 ## Deployment
 
-Hosted on **GitHub Pages**, deployed from a branch (Settings → Pages →
-Build and deployment → Source). **Every push to whichever branch is
-set as the Pages source redeploys the live site immediately** — there
-is no staging step and no build to wait on. See
+Hosted on **GitHub Pages**, deployed from `main` (Settings → Pages →
+Build and deployment → Source). Every merge into `main` redeploys the
+live site immediately — there is no staging step. See
 [AGENTS.md](./AGENTS.md) for the branch discipline this requires.
 
 ## Domain
@@ -43,34 +50,29 @@ is no staging step and no build to wait on. See
 - Custom domain: `deanbrickland.com`, set via the `CNAME` file at the
   repo root (required by GitHub Pages — don't remove it).
 - DNS and email are managed in **Cloudflare**:
-  - Email Routing forwards the site's contact address to a personal
-    Gmail address. The **catch-all rule is intentionally disabled**
-    (set to Drop) to avoid amplifying dictionary-attack spam — don't
-    re-enable it.
+  - Email Routing forwards the site's contact address (the one the
+    "Show address" button assembles) to a personal Gmail address. The
+    **catch-all rule is intentionally disabled** (set to Drop) to avoid
+    amplifying dictionary-attack spam — don't re-enable it.
   - Don't touch DNS records (especially MX) without understanding
     what they serve; breaking them breaks mail delivery, not just the
     site.
 
-## Assets
+## Assets (`main`)
 
 | File | Purpose |
 |---|---|
-| `index.html` | The entire site |
-| `404.html` | Custom not-found page, auto-served by GitHub Pages |
+| `index.html` | Holding page (`noindex`, click-to-reveal contact address) |
+| `404.html` | Custom not-found page (`noindex`, root-absolute assets), auto-served by GitHub Pages |
 | `CNAME` | Custom domain config for GitHub Pages |
+| `_config.yml` | Tells GitHub Pages' Jekyll build not to publish internal files (`README.md`, `AGENTS.md`, `scripts/`) |
 | `robots.txt` | Crawler rules — explicitly allows major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) |
 | `sitemap.xml` | Single-page sitemap |
 | `llms.txt` | Plain-text site summary for LLMs that check this convention |
+| `fonts/` | Self-hosted Archivo and IBM Plex Mono (Latin-subset WOFF2) with their SIL OFL licence texts. The site makes no third-party requests |
 | `favicon.png` | Browser tab icon |
-| `logo.png` | "DB" monogram mark, used in the nav and 404 page |
-| `portrait.webp` | Headshot, used in the About section |
-| `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image) |
-| `card-plan-1.webp`, `card-plan-2.webp`, `card-plan-3.webp` | Cropped details used as the three focus-card images |
-| `site-plan.webp` | Source drawing the `card-plan-*` crops were cut from — kept in case new crops are needed |
-
-The page also carries `Person`/`ProfilePage` JSON-LD structured data
-and Open Graph/Twitter Card meta tags for search and social previews
-— see the `<head>` of `index.html`.
+| `logo.png` | "DB" monogram mark, used in the header and 404 page |
+| `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image), in the white/charcoal style |
 
 ## Checks
 
@@ -78,8 +80,11 @@ and Open Graph/Twitter Card meta tags for search and social previews
 python3 scripts/check.py
 ```
 
-Runs on every push/PR via `.github/workflows/check.yml`. See
-[AGENTS.md](./AGENTS.md) for what it checks and why.
+Runs on every push/PR via `.github/workflows/check.yml`. It checks
+links, `srcset`, CSS `url()`, `404.html` root-absolute URLs, CSP
+inline-script hashes, metadata, and ensures no internal files or
+plaintext email addresses are committed or published. See
+[AGENTS.md](./AGENTS.md) for full details.
 
 ## More
 

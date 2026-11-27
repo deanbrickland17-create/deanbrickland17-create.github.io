@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IE">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; font-src 'self'; style-src 'unsafe-inline'; script-src 'sha256-Rk/9//mj5mhff8zo1zjWb76sVwyp2udnqeXgOwZGBLg='; base-uri 'none'; form-action 'none'">
 <title>Dean Brickland — Town Planner</title>
 <meta name="description" content="Personal site of Dean Brickland, town planner. Currently being rebuilt.">
 <meta name="robots" content="noindex">
@@ -24,11 +27,29 @@
 <meta name="twitter:image" content="https://deanbrickland.com/og-image.png">
 <meta name="twitter:image:alt" content="Dean Brickland — Town Planner">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <style>
+  /* Fonts are self-hosted (see fonts/README.txt): no third-party requests. */
+  @font-face{
+    font-family:"Archivo";
+    font-style:normal;
+    font-weight:400 600;
+    font-stretch:100%;
+    font-display:swap;
+    src:url("fonts/archivo-latin.woff2") format("woff2");
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face{
+    font-family:"IBM Plex Mono";
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url("fonts/ibm-plex-mono-400-latin.woff2") format("woff2");
+    unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
   :root{
     --paper:#FFFFFF;
     --ink:#202124;
@@ -60,6 +81,14 @@
   img{ display:block; max-width:100%; }
   a{ color:inherit; }
   button{ color:inherit; font:inherit; }
+  .sr-only{
+    position:absolute;
+    width:1px; height:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+  }
+  .arrow{ font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
   a:focus-visible, button:focus-visible{
     outline:2px solid var(--focus);
     outline-offset:4px;
@@ -151,7 +180,8 @@
     justify-self:end;
     padding-bottom:.25rem;
   }
-  .holding-copy > p{ color:var(--ink-soft); font-size:clamp(1rem,1.35vw,1.1rem); }
+  .holding-copy > p, .holding-copy noscript p{ color:var(--ink-soft); font-size:clamp(1rem,1.35vw,1.1rem); }
+  .holding-copy noscript p{ margin-top:1rem; }
 
   .contact-list{
     margin-top:2.5rem;
@@ -173,7 +203,7 @@
     text-align:right;
     overflow-wrap:anywhere;
   }
-  .contact-row > a, .contact-row button{
+  .contact-row > a, .contact-row .contact-value > a, .contact-row button{
     min-height:44px;
     display:inline-flex;
     align-items:center;
@@ -208,11 +238,11 @@
   @media (prefers-reduced-motion:no-preference){
     .intro-rise{ animation:intro-rise .6s cubic-bezier(.22,.72,.28,1) both; }
     .intro-delay{ animation-delay:.12s; }
-    .contact-row a span:last-child, .contact-row button span:last-child{
+    .contact-row a .arrow, .contact-row button .arrow{
       transition:transform .2s ease;
     }
-    .contact-row a:hover span:last-child, .contact-row a:focus-visible span:last-child,
-    .contact-row button:hover span:last-child, .contact-row button:focus-visible span:last-child{
+    .contact-row a:hover .arrow, .contact-row a:focus-visible .arrow,
+    .contact-row button:hover .arrow, .contact-row button:focus-visible .arrow{
       transform:translate(3px,-3px);
     }
   }
@@ -246,7 +276,7 @@
   @media (prefers-reduced-motion:reduce){
     html{ scroll-behavior:auto; }
     .intro-rise{ animation:none; transform:none; }
-    .contact-row a span:last-child, .contact-row button span:last-child{ transition:none; }
+    .contact-row a .arrow, .contact-row button .arrow{ transition:none; }
   }
 </style>
 </head>
@@ -257,7 +287,7 @@
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href="/" aria-label="Dean Brickland homepage">
-        <span class="brand-chip"><img src="logo.png" alt="" width="26" height="26"></span>
+        <span class="brand-chip"><img src="logo.png" alt="" width="180" height="230"></span>
         Dean Brickland
       </a>
       <span class="header-role">Town Planner</span>
@@ -273,17 +303,18 @@
 
       <div class="holding-copy intro-rise intro-delay">
         <p>I'm a town planner in Dublin, currently rebuilding this site. In the meantime, the quickest way to reach me is by email or LinkedIn.</p>
+        <noscript><p>The email address appears when JavaScript is on. Without it, LinkedIn is the best way to reach me.</p></noscript>
 
         <div class="contact-list">
           <div class="contact-row">
             <span class="contact-label mono">Email</span>
             <span id="email-slot" class="contact-value" aria-live="polite">
-              <button id="email-reveal" type="button" aria-controls="email-slot">Show address <span aria-hidden="true">&nearr;</span></button>
+              <button id="email-reveal" type="button" aria-controls="email-slot">Show address <span class="arrow" aria-hidden="true">&nearr;</span></button>
             </span>
           </div>
           <div class="contact-row">
             <span class="contact-label mono">LinkedIn</span>
-            <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span>View profile</span><span aria-hidden="true">&nearr;</span></a>
+            <a href="https://www.linkedin.com/in/dean-brickland/" target="_blank" rel="noopener"><span>View profile</span><span class="arrow" aria-hidden="true">&nearr;</span><span class="sr-only"> (opens in a new tab)</span></a>
           </div>
         </div>
       </div>
@@ -321,4 +352,3 @@
   </script>
 </body>
 </html>
-

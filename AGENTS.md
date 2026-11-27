@@ -7,10 +7,10 @@ in this project's history. Don't repeat them.
 
 ## Branch discipline — read this first
 
-**GitHub Pages deploys from a branch, and every push to that branch
-redeploys the live site immediately.** There is no staging, no
-preview step, no confirmation. Check Settings → Pages → Source to see
-which branch is currently live before doing anything else.
+**GitHub Pages currently deploys `main`, which intentionally serves a
+holding page. Every push to the Pages source redeploys the live site
+immediately.** There is no staging, preview step, or confirmation.
+Check Settings → Pages → Source before changing deployment behavior.
 
 Rules:
 
@@ -19,19 +19,22 @@ Rules:
   the site should go live now. "Make this change" is not the same
   instruction as "publish this change" — they are two separate asks
   and the second one requires explicit confirmation.
-- Do development on `draft` or a feature branch. Push there freely.
+- Treat `draft` as the canonical website development branch. Temporary
+  feature branches should start from it and be removed after integration.
+- The original visual directions are preserved as
+  `concept/pine-original` and `concept/softclub-original` tags. Use
+  those tags for reference; do not recreate long-lived style branches.
+- This repo holds the website and nothing else. Dean's other projects
+  have their own repos (the finance tracker lives in `Financial-Tracker`).
+  If a session has been opened in the wrong repo, stop: don't push
+  unrelated work here. A `claude/*` or other stray branch whose changes
+  have nothing to do with the website was pushed to the wrong repo. Tell
+  Dean it can be deleted; don't document it as something to "retain".
 - If you're unsure whether the site is currently meant to be live or
   not, ask. Don't infer it from the state of the branch.
 - If you discover the site republished unexpectedly, the cause is
   almost certainly a push landed on the Pages source branch. Check
   `git log` on that branch before assuming it's a GitHub-side issue.
-- **`main`'s `index.html` may be a deliberate placeholder** ("New site
-  coming soon"), not the real site — check before assuming it's stale
-  or broken. `main` and `draft` are allowed to diverge on purpose: the
-  human can ask for a placeholder to go live on `main` while the real
-  build keeps progressing on `draft`. Don't "fix" `main` by copying
-  `draft` over it without being asked — that's a publish action same
-  as any other push to the Pages source branch.
 
 ## Content rules
 
@@ -39,10 +42,14 @@ Rules:
   article titles/links, credentials, or employer details. If a piece
   of content needs a real fact you don't have, leave it as a visible
   placeholder or ask, rather than writing something plausible-sounding.
-- **The three "Writing" entries are currently placeholders** with
-  `href="#"`. Don't invent article content for them. Either wire them
-  to real URLs once supplied, or restructure the section (e.g. link
-  out to LinkedIn) rather than leave dead links live.
+- **Writing lives in `writing/`, one standalone HTML page per essay**,
+  listed newest-first in the Writing section of `index.html` and in
+  `sitemap.xml` and `llms.txt`. Only publish pieces Dean has approved.
+  Don't invent article titles, dates or content, and never add an entry
+  that points at `#`. Article pages carry their own `<style>` block
+  (like `404.html`) and use root-absolute asset paths (`/fonts/...`).
+  Factual claims in an essay link to a source in its Sources list;
+  those links open in the same tab, like any reference list.
 - Settled word choices — don't silently revert these:
   - "town planner", not "spatial planner"
   - "economy" / "local economic development", not "technology" (the
@@ -54,56 +61,90 @@ Rules:
 
 ## Email / anti-scraping — do not regress this
 
-The contact address was harvested by spam bots once already. The
-fix in place:
+The contact address was harvested by spam bots once already. The fix
+in place:
 
-- The contact email is **assembled at runtime by a small inline
-  script** (`index.html`, near the closing `</body>`), not written as
-  a plaintext `mailto:` link or plaintext text node.
-- The literal address does **not** appear anywhere in static HTML,
-  JSON-LD, or `llms.txt`. `llms.txt` points at `/#contact` instead of
-  printing the address.
-- `scripts/check.py` enforces this automatically (it fails the build
-  if a plaintext `name@domain` pattern appears in rendered HTML) — if
-  you need to change the contact flow, keep this check passing, don't
-  weaken or remove it to make a change land.
+- The contact email is **assembled only after the visitor presses the
+  "Show address" button** (`index.html`, near the closing `</body>`).
+  It is not written as a plaintext `mailto:` link, inserted into the
+  DOM on page load, or stored as a plaintext text node. Keep the
+  control a `<button>`: it performs an action, it doesn't navigate.
+- The literal address does **not** appear anywhere in the repo:
+  not in HTML, JSON-LD, `llms.txt`, or these docs. Write "the contact
+  address" instead. `llms.txt` points at `/#contact`.
+- **GitHub Pages publishes every file `_config.yml` doesn't exclude.**
+  Before that file existed, `README.md`, `AGENTS.md` (also rendered as
+  `/AGENTS.html`) and `scripts/` were served on deanbrickland.com, with
+  the address in plaintext. Any new internal doc or script must be added
+  to the `exclude` list.
+- `scripts/check.py` enforces this automatically: it fails if a
+  plaintext `name@domain` pattern appears in any file that would be
+  published. If you need to change the contact flow, keep this check
+  passing, don't weaken or remove it to make a change land.
 - Cloudflare Email Routing catch-all is intentionally **Drop**, not
   forwarding — this is infrastructure config, not something in this
   repo, but don't reference or imply a catch-all setup in any content.
 
 ## Design conventions
 
-The current default style (on `draft`) is a dark pine/cream/lime
-identity, defined entirely as CSS custom properties at the top of the
-`<style>` block in `index.html`:
+The current style (on `draft`) is a white/charcoal editorial system,
+defined entirely as CSS custom properties at the top of the `<style>`
+block in `index.html`. It is the same system as the live holding page
+on `main` and as `404.html`:
 
 ```
---pine, --pine-deep, --pine-card   dark grounds
---sage, --sage-img                  muted green / image-tint
---cream, --cream-line               light ground / hairlines
---lime                              accent
---ink, --ink-fade                   text on cream
+--paper                white ground
+--ink                  charcoal text (16:1 on paper)
+--ink-soft             body copy (6.0:1)
+--ink-faint            small mono labels (5.1:1, AA) -- do not lighten
+--line, --line-strong  hairline dividers / row rules
+--surface              ground behind images
 ```
 
-An alternate style direction ("Gen X Soft Club" — cool greys, washed
-denim/sage, lowercase Helvetica, blue-cast imagery) exists on
-`style-softclub`, branched from `draft`. If asked to restyle:
+Structure is hairline rules and rows rather than cards or filled
+pills: uppercase mono labels, underlined text links with a `↗`
+arrow, small radii (`--radius: 3px`), greyscale photography (applied
+in CSS, not baked into the files). Sections are lettered A–D in scroll
+order (Focus, About, Writing, Contact) -- keep the letters in the
+order they appear on the page.
+
+The former dark pine/cream/lime identity is archived at the
+`concept/pine-original` tag.
+
+Another direction ("Gen X Soft Club" — cool greys, washed denim/sage,
+lowercase Helvetica, blue-cast imagery) is archived at the
+`concept/softclub-original` tag. If asked to restyle:
 
 - Change tokens, not one-off hex values scattered through rules. Every
   color in the page should trace back to a `:root` custom property.
-- Keep both light/dark visual roles working — sections alternate
-  between a dark "hero" band and light content bands; a new palette
-  needs to work in both.
+- Check contrast for every new text/background pair (small text needs
+  4.5:1). The holding page's original `--ink-faint` (`#7B7E84`) failed
+  at 4.07:1 and was darkened here.
 - The site has no build step and no bundler. Don't introduce one for
   a styling change — plain CSS in the single `<style>` block is the
   convention here, on purpose, for a page this size.
-- Preserve the responsive breakpoints (`840px`, `560px`) and the
-  `prefers-reduced-motion` handling already in place.
+- Preserve the responsive breakpoints (`840px`, `480px`) and the
+  `prefers-reduced-motion` handling already in place. Below 840px the
+  header wraps to two rows; the section links stay visible. Don't hide
+  navigation on small screens.
+- **New-tab links** (only LinkedIn, at present) keep `rel="noopener"`
+  and a visually hidden `<span class="sr-only"> (opens in a new tab)</span>`,
+  because the `↗` arrow is hidden from screen readers.
+- **Card photos ship in three widths** (`card-photo-N-480.webp`,
+  `-800.webp` and the 1200px original) via `srcset`/`sizes`. If a photo
+  changes, regenerate all three.
+- **No third-party requests.** Fonts are self-hosted in `fonts/` (two
+  Latin-subset WOFF2 files plus their OFL licence texts). Don't add a
+  Google Fonts, CDN or analytics link: it would send every visitor's IP
+  address to another company. If a new font is needed, download it into
+  `fonts/` with its licence file and add a `@font-face` rule.
 - Any new branch should fork from `draft` (which carries the current
   content/SEO/anti-scraping baseline), not from `main`.
 - **`404.html` has its own inline `<style>` block and does not share
   `index.html`'s `:root` tokens** (it's a standalone minimal page, kept
-  deliberately small). If you change the active palette/type on a
+  deliberately small). Every URL in it must be root-absolute (`/logo.png`,
+  `/fonts/...`): GitHub Pages serves it for missing paths at any depth,
+  where relative URLs break. It is `noindex`. If you change the active palette/type on a
   branch, update `404.html` to match by hand — otherwise a broken link
   drops visitors onto what looks like a different site.
 
@@ -112,10 +153,18 @@ denim/sage, lowercase Helvetica, blue-cast imagery) exists on
 Before committing:
 
 1. **Run the checker**: `python3 scripts/check.py` (add `--no-network`
-   in a sandboxed environment with no outbound access). It checks for
-   broken local links/images, dead `#fragment` anchors, missing `alt`
-   attributes, missing `<title>`/description/`lang`, invalid JSON-LD,
-   and the plaintext-email regression described above. This also runs
+   in a sandboxed environment with no outbound access). It works out
+   which files GitHub Pages would publish (honouring `_config.yml`
+   `exclude`) and checks for broken local links, images (`src` and
+   `srcset`), CSS `url()` assets inside `<style>`/`style=""`, and
+   `og:image` targets, dead `#fragment` anchors (including cross-page
+   ones), relative URLs in `404.html`, duplicate IDs, image dimensions
+   and `alt` attributes, document landmarks/headings, safe new-tab
+   links, metadata, JSON-LD syntax and membership ranges, CSP inline
+   `<script>` SHA-256 hashes (prints the exact hash to update if you
+   edit an inline script), `sitemap.xml`/`llms.txt` targets, pages
+   missing from the sitemap, published Markdown/Python files, and a
+   plaintext email address in any text file in the repo. This also runs
    automatically in CI via `.github/workflows/check.yml` on every push
    and PR.
 2. **Visually check both a mobile (~390px) and desktop (~1280px)

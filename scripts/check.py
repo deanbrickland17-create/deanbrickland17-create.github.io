@@ -4,9 +4,9 @@ Static checks for this repo's HTML pages. No dependencies beyond the
 standard library, so it runs the same locally and in CI.
 
 Checks:
-  - every local href/src, CSS url(), and og:image/twitter:image/og:url
-    (relative path, or an absolute https://<CNAME domain>/... URL) points at
-    a file that exists in the repo
+  - every local href/src/srcset, CSS url() inside <style>/style="", and
+    og:image/twitter:image/og:url (relative path, or an absolute
+    https://<CNAME domain>/... URL) points at a file that exists in the repo
   - every #fragment link resolves to an id= in its target page
   - 404.html uses only root-absolute local URLs (GitHub Pages serves it for
     missing paths at any depth, where relative URLs break)
@@ -19,9 +19,10 @@ Checks:
   - each page has exactly one <main> and one <h1>, with no heading-level skips
   - <title>, <meta name="description">, <meta name="viewport">, and html[lang] are present
   - any application/ld+json block is valid JSON, and Person.memberOf uses an expected type
-  - no plaintext "name@domain" email pattern appears in any file GitHub
-    Pages would publish (the contact address is assembled at runtime on
-    purpose -- see AGENTS.md -- so a literal match is a regression), and no
+  - any <meta http-equiv="Content-Security-Policy"> with script-src matches
+    the SHA-256 hash of every inline executable <script> on the page
+  - no plaintext "name@domain" email pattern appears in any tracked text file
+    in the repo (published or excluded docs -- see AGENTS.md), and no
     internal Markdown or Python file is published (see _config.yml exclude)
   - (network, best-effort, non-fatal) external https:// links resolve.
     Skipped automatically when the sandbox has no outbound access.
@@ -31,6 +32,8 @@ Usage:
     python3 scripts/check.py index.html # check a specific file
     python3 scripts/check.py --no-network
 """
+import base64
+import hashlib
 import json
 import os
 import re
@@ -114,6 +117,7 @@ class PageParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.links = []  # (tag, attr, value, line)
+        self.csp_policies = []  # (content, line)
         self.ids = set()
         self.duplicate_ids = []  # (id, line)
         self.imgs_missing_alt = []  # line numbers
@@ -150,10 +154,20 @@ class PageParser(HTMLParser):
         for attr in ("href", "src"):
             if attr in attrs and attrs[attr]:
                 self.links.append((tag, attr, attrs[attr], line))
+        if tag in ("img", "source") and attrs.get("srcset"):
+            for candidate in attrs["srcset"].split(","):
+                parts = candidate.strip().split()
+                if parts:
+                    self.links.append((tag, "srcset", parts[0], line))
+        if attrs.get("style"):
+            for m in CSS_URL_RE.finditer(attrs["style"]):
+                self.links.append((tag, "style url()", m.group(1).strip(), line))
         if tag == "meta" and attrs.get("content"):
             key = attrs.get("property") or attrs.get("name")
             if key in META_URL_KEYS:
                 self.links.append((tag, "content", attrs["content"], line))
+            if (attrs.get("http-equiv") or "").lower() == "content-security-policy":
+                self.csp_policies.append((attrs["content"], line))
 
         if tag == "img":
             if "alt" not in attrs:
@@ -267,8 +281,12 @@ def check_file(path, domains, network, errors, warnings):
         errors.append(f"{rel}:{line}: <{tag}> with target=\"_blank\" must include rel=\"noopener\"")
 
     links = list(parser.links)
-    for m in CSS_URL_RE.finditer(html):
-        links.append(("style", "url()", m.group(1).strip(), html.count("\n", 0, m.start()) + 1))
+    for style_m in re.finditer(r"<style[^>]*>(.*?)</style>", html, re.S | re.I):
+        style_body = style_m.group(1)
+        style_offset = style_m.start(1)
+        for m in CSS_URL_RE.finditer(style_body):
+            line = html.count("\n", 0, style_offset + m.start()) + 1
+            links.append(("style", "url()", m.group(1).strip(), line))
 
     for tag, attr, value, line in links:
         if value.startswith(("mailto:", "tel:", "data:")):
@@ -299,6 +317,44 @@ def check_file(path, domains, network, errors, warnings):
             errors.append(f"{rel}: invalid JSON-LD ({e})")
         else:
             check_jsonld_semantics(data, rel, errors)
+
+    check_csp_scripts(html, parser.csp_policies, rel, errors)
+
+
+def check_csp_scripts(html, csp_policies, rel, errors):
+    """Ensure every inline executable <script> is allowed by any <meta> CSP."""
+    if not csp_policies:
+        return
+    inline_scripts = []
+    for m in re.finditer(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script>", html, re.S | re.I):
+        attrs = m.group("attrs")
+        if re.search(r"\bsrc\s*=", attrs, re.I):
+            continue
+        type_m = re.search(r'\btype\s*=\s*["\']?([^"\'\s>]+)', attrs, re.I)
+        if type_m and type_m.group(1).lower() not in ("text/javascript", "application/javascript", "module"):
+            continue
+        body = m.group("body").replace("\r\n", "\n").replace("\r", "\n")
+        if not body.strip():
+            continue
+        digest = base64.b64encode(hashlib.sha256(body.encode("utf-8")).digest()).decode("ascii")
+        line = html.count("\n", 0, m.start()) + 1
+        inline_scripts.append((line, f"'sha256-{digest}'"))
+
+    for policy, csp_line in csp_policies:
+        directives = {}
+        for part in policy.split(";"):
+            tokens = part.strip().split()
+            if tokens:
+                directives[tokens[0].lower()] = tokens[1:]
+        effective = directives.get("script-src", directives.get("default-src", []))
+        if "'unsafe-inline'" in effective:
+            continue
+        for script_line, expected_hash in inline_scripts:
+            if expected_hash not in effective:
+                errors.append(
+                    f"{rel}:{script_line}: inline <script> hash {expected_hash} missing from "
+                    f"CSP at line {csp_line} (update script-src after editing the script)"
+                )
 
 
 _ID_CACHE = {}
@@ -334,21 +390,38 @@ def check_site_url(value, page_path, domains):
     return None
 
 
+SKIP_SCAN_DIRS = {".git", "_site", ".jekyll-cache", ".sass-cache", "node_modules", "vendor"}
+
+
+def repo_text_files():
+    """All repo-relative text files (including excluded docs) to scan for secrets/emails."""
+    files = []
+    for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
+        rel_dir = os.path.relpath(dirpath, REPO_ROOT)
+        rel_dir = "" if rel_dir == "." else rel_dir + "/"
+        dirnames[:] = sorted(d for d in dirnames if d not in SKIP_SCAN_DIRS)
+        for name in sorted(filenames):
+            ext = os.path.splitext(name)[1].lower()
+            if ext in TEXT_EXTENSIONS:
+                files.append(rel_dir + name)
+    return files
+
+
 def check_published(domains, errors):
-    """Repo-wide checks over what GitHub Pages would actually serve."""
+    """Repo-wide checks over what GitHub Pages would actually serve, plus repo-wide email scan."""
     published = published_files()
     for rel in published:
         ext = os.path.splitext(rel)[1].lower()
         if ext in INTERNAL_EXTENSIONS:
             errors.append(f"{rel}: internal file would be published on the site -- add it to _config.yml exclude")
-        if ext not in TEXT_EXTENSIONS:
-            continue
+
+    for rel in repo_text_files():
         with open(os.path.join(REPO_ROOT, rel), encoding="utf-8", errors="replace") as f:
             text = f.read()
         for m in EMAIL_RE.finditer(text):
             line = text.count("\n", 0, m.start()) + 1
             errors.append(
-                f"{rel}:{line}: plaintext email address \"{m.group(0)}\" in a published file "
+                f"{rel}:{line}: plaintext email address \"{m.group(0)}\" found in repo "
                 f"(the address is assembled at runtime -- see AGENTS.md)"
             )
 
