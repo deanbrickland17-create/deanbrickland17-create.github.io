@@ -155,14 +155,16 @@ Before committing:
 1. **Run the checker**: `python3 scripts/check.py` (add `--no-network`
    in a sandboxed environment with no outbound access). It works out
    which files GitHub Pages would publish (honouring `_config.yml`
-   `exclude`) and checks for broken local links, images, CSS `url()`
-   assets and `og:image` targets, dead `#fragment` anchors (including
-   cross-page ones), relative URLs in `404.html`, duplicate IDs, image
-   dimensions and `alt` attributes, document landmarks/headings, safe
-   new-tab links, metadata, JSON-LD syntax and membership ranges,
-   `sitemap.xml`/`llms.txt` targets, pages missing from the sitemap,
-   published Markdown/Python files, and a plaintext email address in
-   any published file. This also runs
+   `exclude`) and checks for broken local links, images (`src` and
+   `srcset`), CSS `url()` assets inside `<style>`/`style=""`, and
+   `og:image` targets, dead `#fragment` anchors (including cross-page
+   ones), relative URLs in `404.html`, duplicate IDs, image dimensions
+   and `alt` attributes, document landmarks/headings, safe new-tab
+   links, metadata, JSON-LD syntax and membership ranges, CSP inline
+   `<script>` SHA-256 hashes (prints the exact hash to update if you
+   edit an inline script), `sitemap.xml`/`llms.txt` targets, pages
+   missing from the sitemap, published Markdown/Python files, and a
+   plaintext email address in any text file in the repo. This also runs
    automatically in CI via `.github/workflows/check.yml` on every push
    and PR.
 2. **Visually check both a mobile (~390px) and desktop (~1280px)
