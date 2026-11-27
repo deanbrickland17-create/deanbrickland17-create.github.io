@@ -1,0 +1,13 @@
+# GitHub Pages builds this repo with Jekyll and publishes every file it
+# does not exclude. Without this list, README.md, AGENTS.md (also rendered
+# as /AGENTS.html) and scripts/ were served on deanbrickland.com.
+# Add any new internal file or folder here. scripts/check.py fails if a
+# published file contains a plaintext email address.
+exclude:
+  - README.md
+  - AGENTS.md
+  - scripts/
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - node_modules/

@@ -48,7 +48,8 @@ Rules:
   Don't invent article titles, dates or content, and never add an entry
   that points at `#`. Article pages carry their own `<style>` block
   (like `404.html`) and use root-absolute asset paths (`/fonts/...`).
-  Factual claims in an essay link to a source in its Sources list.
+  Factual claims in an essay link to a source in its Sources list;
+  those links open in the same tab, like any reference list.
 - Settled word choices — don't silently revert these:
   - "town planner", not "spatial planner"
   - "economy" / "local economic development", not "technology" (the
@@ -60,20 +61,26 @@ Rules:
 
 ## Email / anti-scraping — do not regress this
 
-`dean@deanbrickland.com` was harvested by spam bots once already. The
-fix in place:
+The contact address was harvested by spam bots once already. The fix
+in place:
 
-- The contact email is **assembled only after the visitor activates
-  "Show address"** (`index.html`, near the closing `</body>`). It is
-  not written as a plaintext `mailto:` link, inserted into the DOM on
-  page load, or stored as a plaintext text node.
-- The literal address does **not** appear anywhere in static HTML,
-  JSON-LD, or `llms.txt`. `llms.txt` points at `/#contact` instead of
-  printing the address.
-- `scripts/check.py` enforces this automatically (it fails the build
-  if a plaintext `name@domain` pattern appears in rendered HTML) — if
-  you need to change the contact flow, keep this check passing, don't
-  weaken or remove it to make a change land.
+- The contact email is **assembled only after the visitor presses the
+  "Show address" button** (`index.html`, near the closing `</body>`).
+  It is not written as a plaintext `mailto:` link, inserted into the
+  DOM on page load, or stored as a plaintext text node. Keep the
+  control a `<button>`: it performs an action, it doesn't navigate.
+- The literal address does **not** appear anywhere in the repo:
+  not in HTML, JSON-LD, `llms.txt`, or these docs. Write "the contact
+  address" instead. `llms.txt` points at `/#contact`.
+- **GitHub Pages publishes every file `_config.yml` doesn't exclude.**
+  Before that file existed, `README.md`, `AGENTS.md` (also rendered as
+  `/AGENTS.html`) and `scripts/` were served on deanbrickland.com, with
+  the address in plaintext. Any new internal doc or script must be added
+  to the `exclude` list.
+- `scripts/check.py` enforces this automatically: it fails if a
+  plaintext `name@domain` pattern appears in any file that would be
+  published. If you need to change the contact flow, keep this check
+  passing, don't weaken or remove it to make a change land.
 - Cloudflare Email Routing catch-all is intentionally **Drop**, not
   forwarding — this is infrastructure config, not something in this
   repo, but don't reference or imply a catch-all setup in any content.
@@ -117,7 +124,15 @@ lowercase Helvetica, blue-cast imagery) is archived at the
   a styling change — plain CSS in the single `<style>` block is the
   convention here, on purpose, for a page this size.
 - Preserve the responsive breakpoints (`840px`, `480px`) and the
-  `prefers-reduced-motion` handling already in place.
+  `prefers-reduced-motion` handling already in place. Below 840px the
+  header wraps to two rows; the section links stay visible. Don't hide
+  navigation on small screens.
+- **New-tab links** (only LinkedIn, at present) keep `rel="noopener"`
+  and a visually hidden `<span class="sr-only"> (opens in a new tab)</span>`,
+  because the `↗` arrow is hidden from screen readers.
+- **Card photos ship in three widths** (`card-photo-N-480.webp`,
+  `-800.webp` and the 1200px original) via `srcset`/`sizes`. If a photo
+  changes, regenerate all three.
 - **No third-party requests.** Fonts are self-hosted in `fonts/` (two
   Latin-subset WOFF2 files plus their OFL licence texts). Don't add a
   Google Fonts, CDN or analytics link: it would send every visitor's IP
@@ -127,7 +142,9 @@ lowercase Helvetica, blue-cast imagery) is archived at the
   content/SEO/anti-scraping baseline), not from `main`.
 - **`404.html` has its own inline `<style>` block and does not share
   `index.html`'s `:root` tokens** (it's a standalone minimal page, kept
-  deliberately small). If you change the active palette/type on a
+  deliberately small). Every URL in it must be root-absolute (`/logo.png`,
+  `/fonts/...`): GitHub Pages serves it for missing paths at any depth,
+  where relative URLs break. It is `noindex`. If you change the active palette/type on a
   branch, update `404.html` to match by hand — otherwise a broken link
   drops visitors onto what looks like a different site.
 
@@ -136,11 +153,16 @@ lowercase Helvetica, blue-cast imagery) is archived at the
 Before committing:
 
 1. **Run the checker**: `python3 scripts/check.py` (add `--no-network`
-   in a sandboxed environment with no outbound access). It checks for
-   broken local links/images, dead `#fragment` anchors, duplicate IDs,
-   image dimensions and `alt` attributes, document landmarks/headings,
-   safe new-tab links, metadata, JSON-LD syntax and membership ranges,
-   and the plaintext-email regression described above. This also runs
+   in a sandboxed environment with no outbound access). It works out
+   which files GitHub Pages would publish (honouring `_config.yml`
+   `exclude`) and checks for broken local links, images, CSS `url()`
+   assets and `og:image` targets, dead `#fragment` anchors (including
+   cross-page ones), relative URLs in `404.html`, duplicate IDs, image
+   dimensions and `alt` attributes, document landmarks/headings, safe
+   new-tab links, metadata, JSON-LD syntax and membership ranges,
+   `sitemap.xml`/`llms.txt` targets, pages missing from the sitemap,
+   published Markdown/Python files, and a plaintext email address in
+   any published file. This also runs
    automatically in CI via `.github/workflows/check.yml` on every push
    and PR.
 2. **Visually check both a mobile (~390px) and desktop (~1280px)

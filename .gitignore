@@ -1,0 +1,14 @@
+# Local and OS clutter that must never be published with the site.
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+_site/
+.jekyll-cache/
+.sass-cache/

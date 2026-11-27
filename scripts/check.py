@@ -4,9 +4,14 @@ Static checks for this repo's HTML pages. No dependencies beyond the
 standard library, so it runs the same locally and in CI.
 
 Checks:
-  - every local href/src (relative path, or an absolute
-    https://<CNAME domain>/... URL) points at a file that exists in the repo
-  - every #fragment link resolves to an id= in the same page
+  - every local href/src, CSS url(), and og:image/twitter:image/og:url
+    (relative path, or an absolute https://<CNAME domain>/... URL) points at
+    a file that exists in the repo
+  - every #fragment link resolves to an id= in its target page
+  - 404.html uses only root-absolute local URLs (GitHub Pages serves it for
+    missing paths at any depth, where relative URLs break)
+  - every on-site URL in sitemap.xml and llms.txt resolves, and every
+    published page except 404.html is listed in sitemap.xml
   - ids are unique
   - every <img> has an alt attribute (empty alt="" is fine for decorative images)
   - every <img> declares width and height to reserve layout space
@@ -14,9 +19,10 @@ Checks:
   - each page has exactly one <main> and one <h1>, with no heading-level skips
   - <title>, <meta name="description">, <meta name="viewport">, and html[lang] are present
   - any application/ld+json block is valid JSON, and Person.memberOf uses an expected type
-  - no plaintext "name@domain" email pattern appears anywhere in the static HTML
-    source (the contact address is assembled at runtime on purpose --
-    see AGENTS.md -- so a literal match here is a regression)
+  - no plaintext "name@domain" email pattern appears in any file GitHub
+    Pages would publish (the contact address is assembled at runtime on
+    purpose -- see AGENTS.md -- so a literal match is a regression), and no
+    internal Markdown or Python file is published (see _config.yml exclude)
   - (network, best-effort, non-fatal) external https:// links resolve.
     Skipped automatically when the sandbox has no outbound access.
 
@@ -29,6 +35,7 @@ import json
 import os
 import re
 import sys
+import urllib.parse
 import urllib.request
 from html.parser import HTMLParser
 
@@ -36,6 +43,58 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
 PERSON_MEMBER_OF_TYPES = {"MemberProgramTier", "Organization", "ProgramMembership"}
+META_URL_KEYS = {"og:image", "og:url", "twitter:image"}
+CSS_URL_RE = re.compile(r"""url\(\s*["']?([^"')]+)""")
+TEXT_EXTENSIONS = {
+    ".html", ".htm", ".md", ".markdown", ".txt", ".xml", ".json", ".css",
+    ".js", ".py", ".yml", ".yaml", ".csv", ".svg",
+}
+INTERNAL_EXTENSIONS = {".md", ".markdown", ".py"}
+
+
+def read_jekyll_excludes():
+    """The exclude list from _config.yml (simple "- item" entries only)."""
+    excludes = []
+    path = os.path.join(REPO_ROOT, "_config.yml")
+    if not os.path.isfile(path):
+        return excludes
+    in_exclude = False
+    with open(path, encoding="utf-8") as f:
+        for raw in f:
+            line = raw.split("#", 1)[0].rstrip()
+            if not line:
+                continue
+            if not line.startswith((" ", "-")):
+                in_exclude = line.startswith("exclude:")
+                continue
+            m = re.match(r"\s*-\s*(.+)", line)
+            if in_exclude and m:
+                excludes.append(m.group(1).strip().strip("\"'").rstrip("/"))
+    return excludes
+
+
+def published_files():
+    """Repo-relative paths GitHub Pages' Jekyll build would publish."""
+    excludes = read_jekyll_excludes()
+
+    def excluded(rel):
+        return any(rel == e or rel.startswith(e + "/") for e in excludes)
+
+    published = []
+    for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
+        rel_dir = os.path.relpath(dirpath, REPO_ROOT)
+        rel_dir = "" if rel_dir == "." else rel_dir + "/"
+        # Jekyll skips names starting with "." or "_" unless told otherwise.
+        dirnames[:] = sorted(
+            d for d in dirnames
+            if not d.startswith((".", "_")) and not excluded(rel_dir + d)
+        )
+        for name in sorted(filenames):
+            rel = rel_dir + name
+            if name.startswith((".", "_")) or excluded(rel):
+                continue
+            published.append(rel)
+    return published
 
 
 def read_cname_domains():
@@ -91,6 +150,10 @@ class PageParser(HTMLParser):
         for attr in ("href", "src"):
             if attr in attrs and attrs[attr]:
                 self.links.append((tag, attr, attrs[attr], line))
+        if tag == "meta" and attrs.get("content"):
+            key = attrs.get("property") or attrs.get("name")
+            if key in META_URL_KEYS:
+                self.links.append((tag, "content", attrs["content"], line))
 
         if tag == "img":
             if "alt" not in attrs:
@@ -203,37 +266,31 @@ def check_file(path, domains, network, errors, warnings):
     for tag, line in parser.blank_targets_missing_noopener:
         errors.append(f"{rel}:{line}: <{tag}> with target=\"_blank\" must include rel=\"noopener\"")
 
-    for tag, attr, value, line in parser.links:
-        if value.startswith("mailto:") or value.startswith("tel:"):
+    links = list(parser.links)
+    for m in CSS_URL_RE.finditer(html):
+        links.append(("style", "url()", m.group(1).strip(), html.count("\n", 0, m.start()) + 1))
+
+    for tag, attr, value, line in links:
+        if value.startswith(("mailto:", "tel:", "data:")):
             continue
         if value.startswith("#"):
             frag = value[1:]
             if frag and frag not in parser.ids:
                 errors.append(f"{rel}:{line}: {tag} {attr}=\"{value}\" has no matching id on the page")
             continue
-        if value.startswith("http://") or value.startswith("https://"):
-            m = re.match(r"https?://([^/]+)(/.*)?", value)
-            host, path_part = m.group(1), (m.group(2) or "/")
-            if host in domains:
-                local = os.path.join(REPO_ROOT, path_part.lstrip("/") or "index.html")
-                if not os.path.isfile(local):
-                    errors.append(f"{rel}:{line}: {tag} {attr}=\"{value}\" -> no local file at {os.path.relpath(local, REPO_ROOT)}")
-            elif network:
+        is_absolute = value.startswith(("http://", "https://"))
+        if rel == "404.html" and not is_absolute and not value.startswith("/"):
+            errors.append(
+                f"{rel}:{line}: {tag} {attr}=\"{value}\" is relative; 404.html is served at any "
+                f"depth (e.g. /writing/missing), so use a root-absolute URL like \"/{value}\""
+            )
+        if is_absolute and urllib.parse.urlsplit(value).hostname not in domains:
+            if network:
                 check_external(value, rel, line, tag, attr, warnings)
             continue
-        # relative local path (strip any #fragment / ?query suffix)
-        clean = value.split("#")[0].split("?")[0]
-        if not clean:
-            continue
-        if clean.startswith("/"):
-            base, clean = REPO_ROOT, clean.lstrip("/")
-        else:
-            base = os.path.dirname(path)
-        if not clean or clean.endswith("/"):
-            clean = os.path.join(clean, "index.html")
-        local = os.path.normpath(os.path.join(base, clean))
-        if not os.path.isfile(local):
-            errors.append(f"{rel}:{line}: {tag} {attr}=\"{value}\" -> file not found ({os.path.relpath(local, REPO_ROOT)})")
+        problem = check_site_url(value, path, domains)
+        if problem:
+            errors.append(f"{rel}:{line}: {tag} {attr}=\"{value}\" {problem}")
 
     for m in re.finditer(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', html, re.S):
         try:
@@ -243,20 +300,88 @@ def check_file(path, domains, network, errors, warnings):
         else:
             check_jsonld_semantics(data, rel, errors)
 
-    static_source = re.sub(r"<!--.*?-->", "", html, flags=re.S)
-    for m in EMAIL_RE.finditer(static_source):
-        errors.append(
-            f"{rel}: plaintext email address \"{m.group(0)}\" found in static HTML "
-            f"(the address should be assembled at runtime -- see AGENTS.md)"
-        )
+
+_ID_CACHE = {}
+
+
+def page_ids(local):
+    if local not in _ID_CACHE:
+        parser = PageParser()
+        with open(local, encoding="utf-8") as f:
+            parser.feed(f.read())
+        _ID_CACHE[local] = parser.ids
+    return _ID_CACHE[local]
+
+
+def check_site_url(value, page_path, domains):
+    """Resolve an on-site URL to a repo file. Returns a problem string or None."""
+    parts = urllib.parse.urlsplit(value)
+    if parts.scheme:
+        if parts.hostname not in domains:
+            return None
+        base, target = REPO_ROOT, parts.path.lstrip("/")
+    elif parts.path.startswith("/"):
+        base, target = REPO_ROOT, parts.path.lstrip("/")
+    else:
+        base, target = os.path.dirname(page_path), parts.path
+    if not target or target.endswith("/"):
+        target = os.path.join(target, "index.html")
+    local = os.path.normpath(os.path.join(base, urllib.parse.unquote(target)))
+    if not os.path.isfile(local):
+        return f"-> file not found ({os.path.relpath(local, REPO_ROOT)})"
+    if parts.fragment and local.endswith(".html") and parts.fragment not in page_ids(local):
+        return f"-> no id=\"{parts.fragment}\" in {os.path.relpath(local, REPO_ROOT)}"
+    return None
+
+
+def check_published(domains, errors):
+    """Repo-wide checks over what GitHub Pages would actually serve."""
+    published = published_files()
+    for rel in published:
+        ext = os.path.splitext(rel)[1].lower()
+        if ext in INTERNAL_EXTENSIONS:
+            errors.append(f"{rel}: internal file would be published on the site -- add it to _config.yml exclude")
+        if ext not in TEXT_EXTENSIONS:
+            continue
+        with open(os.path.join(REPO_ROOT, rel), encoding="utf-8", errors="replace") as f:
+            text = f.read()
+        for m in EMAIL_RE.finditer(text):
+            line = text.count("\n", 0, m.start()) + 1
+            errors.append(
+                f"{rel}:{line}: plaintext email address \"{m.group(0)}\" in a published file "
+                f"(the address is assembled at runtime -- see AGENTS.md)"
+            )
+
+    sitemap = os.path.join(REPO_ROOT, "sitemap.xml")
+    listed = set()
+    if os.path.isfile(sitemap):
+        with open(sitemap, encoding="utf-8") as f:
+            for loc in re.findall(r"<loc>\s*(.*?)\s*</loc>", f.read()):
+                problem = check_site_url(loc, sitemap, domains)
+                if problem:
+                    errors.append(f"sitemap.xml: {loc} {problem}")
+                path = urllib.parse.urlsplit(loc).path.lstrip("/")
+                listed.add(path if path and not path.endswith("/") else path + "index.html")
+        for rel in published:
+            if rel.endswith(".html") and rel != "404.html" and rel not in listed:
+                errors.append(f"sitemap.xml: published page {rel} is not listed")
+
+    llms = os.path.join(REPO_ROOT, "llms.txt")
+    if os.path.isfile(llms):
+        with open(llms, encoding="utf-8") as f:
+            for url in re.findall(r"https?://[^\s)>\]]+", f.read()):
+                problem = check_site_url(url.rstrip(".,;"), llms, domains)
+                if problem:
+                    errors.append(f"llms.txt: {url} {problem}")
 
 
 def check_external(url, rel, line, tag, attr, warnings):
     try:
-        req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "repo-link-check/1.0"})
-        urllib.request.urlopen(req, timeout=6)
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; site-link-check/1.1)"})
+        urllib.request.urlopen(req, timeout=8).close()
     except Exception as e:
-        warnings.append(f"{rel}:{line}: {tag} {attr}=\"{url}\" unreachable ({e.__class__.__name__}) -- not fatal")
+        detail = getattr(e, "code", None) or e.__class__.__name__
+        warnings.append(f"{rel}:{line}: {tag} {attr}=\"{url}\" unreachable ({detail}) -- not fatal")
 
 
 def main():
@@ -267,12 +392,9 @@ def main():
     if args:
         targets = [os.path.join(REPO_ROOT, a) for a in args]
     else:
-        targets = []
-        for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
-            dirnames[:] = sorted(d for d in dirnames if not d.startswith("."))
-            targets.extend(
-                os.path.join(dirpath, f) for f in sorted(filenames) if f.endswith(".html")
-            )
+        targets = [
+            os.path.join(REPO_ROOT, rel) for rel in published_files() if rel.endswith(".html")
+        ]
 
     domains = read_cname_domains()
     errors, warnings = [], []
@@ -282,6 +404,7 @@ def main():
             errors.append(f"{path}: not found")
             continue
         check_file(path, domains, network, errors, warnings)
+    check_published(domains, errors)
 
     for w in warnings:
         print(f"WARN  {w}")

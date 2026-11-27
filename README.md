@@ -51,8 +51,8 @@ is no staging step and no build to wait on. See
 - Custom domain: `deanbrickland.com`, set via the `CNAME` file at the
   repo root (required by GitHub Pages — don't remove it).
 - DNS and email are managed in **Cloudflare**:
-  - Email Routing forwards `dean@deanbrickland.com` to a personal
-    Gmail address. The **catch-all rule is intentionally disabled**
+  - Email Routing forwards the site's contact address (the one the
+    "Show address" button assembles) to a personal Gmail address. The **catch-all rule is intentionally disabled**
     (set to Drop) to avoid amplifying dictionary-attack spam — don't
     re-enable it.
   - Don't touch DNS records (especially MX) without understanding
@@ -67,6 +67,7 @@ is no staging step and no build to wait on. See
 | `404.html` | Custom not-found page, auto-served by GitHub Pages |
 | `writing/` | One standalone page per essay, listed in the Writing section |
 | `CNAME` | Custom domain config for GitHub Pages |
+| `_config.yml` | Tells GitHub Pages' Jekyll build not to publish internal files (`README.md`, `AGENTS.md`, `scripts/`) |
 | `robots.txt` | Crawler rules — explicitly allows major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) |
 | `sitemap.xml` | Sitemap: homepage plus each essay |
 | `llms.txt` | Plain-text site summary for LLMs that check this convention |
@@ -75,7 +76,7 @@ is no staging step and no build to wait on. See
 | `logo.png` | "DB" monogram mark, used in the nav and 404 page |
 | `portrait.webp` | Headshot, used in the About section |
 | `og-image.png` | 1200×630 social share card (Open Graph / Twitter Card image), in the white/charcoal style |
-| `card-photo-1.webp`, `card-photo-2.webp`, `card-photo-3.webp` | Dean's own station photographs, cropped for the three focus cards (the greyscale treatment is applied in CSS, not baked in). The earlier site-plan crops are preserved in the `concept/pine-original` tag |
+| `card-photo-1.webp`, `card-photo-2.webp`, `card-photo-3.webp` | Dean's own station photographs, cropped for the three focus cards (the greyscale treatment is applied in CSS, not baked in). Each also ships as `-480.webp` and `-800.webp` for `srcset`. The earlier site-plan crops are preserved in the `concept/pine-original` tag |
 
 The page also carries `Person`/`ProfilePage` JSON-LD structured data
 and Open Graph/Twitter Card meta tags for search and social previews
@@ -87,7 +88,9 @@ and Open Graph/Twitter Card meta tags for search and social previews
 python3 scripts/check.py
 ```
 
-Runs on every push/PR via `.github/workflows/check.yml`. See
+Runs on every push/PR via `.github/workflows/check.yml`. It also
+checks what GitHub Pages would publish, so an internal file or a
+plaintext email address can't reach the live site unnoticed. See
 [AGENTS.md](./AGENTS.md) for what it checks and why.
 
 ## More
