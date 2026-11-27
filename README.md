@@ -65,7 +65,7 @@ is no staging step and no build to wait on. See
 |---|---|
 | `index.html` | The entire site |
 | `404.html` | Custom not-found page, auto-served by GitHub Pages |
-| `writing/` | One standalone page per essay, listed in the Writing section |
+| `writing/` | Standalone essay HTML pages (plus any essay-specific 1200×630 `-og.png` share cards), listed in the Writing section |
 | `CNAME` | Custom domain config for GitHub Pages |
 | `_config.yml` | Tells GitHub Pages' Jekyll build not to publish internal files (`README.md`, `AGENTS.md`, `scripts/`) |
 | `robots.txt` | Crawler rules — explicitly allows major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) |
@@ -90,8 +90,12 @@ python3 scripts/check.py
 
 Runs on every push/PR via `.github/workflows/check.yml`. It also
 checks what GitHub Pages would publish, so an internal file or a
-plaintext email address can't reach the live site unnoticed. See
-[AGENTS.md](./AGENTS.md) for what it checks and why.
+plaintext email address can't reach the live site unnoticed. A
+separate weekly read-only workflow (`.github/workflows/monitor.yml`,
+active once merged to `main`) checks live availability, security
+headers, and both the Cloudflare edge and GitHub Pages origin TLS
+certificates. See [AGENTS.md](./AGENTS.md) for what `check.py` checks
+and why.
 
 ## More
 
