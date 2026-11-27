@@ -1,0 +1,66 @@
+name: Monitor
+
+# Weekly read-only health check for deanbrickland.com (no tracking, no secrets).
+# Verifies live availability, custom 404, Cloudflare security headers, and both
+# the Cloudflare edge cert and GitHub Pages origin cert (checked directly by IP
+# so a stalled renewal behind Cloudflare alerts two weeks before expiry).
+# Note: GitHub Actions only runs scheduled workflows from the default branch (main).
+on:
+  schedule:
+    # Mondays at 08:17 UTC
+    - cron: "17 8 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check live HTTP status, 404, and security headers
+        run: |
+          set -euo pipefail
+
+          headers=$(curl -sSI --max-time 15 https://deanbrickland.com/)
+          echo "$headers"
+          echo "$headers" | grep -qiE "^HTTP/[0-9.]+ 200"
+
+          for required in \
+            "strict-transport-security:" \
+            "content-security-policy:.*frame-ancestors 'none'" \
+            "x-content-type-options: nosniff" \
+            "x-frame-options: DENY" \
+            "referrer-policy: strict-origin-when-cross-origin" \
+            "permissions-policy:"; do
+            if ! echo "$headers" | grep -qiE "^$required"; then
+              echo "::error::Missing expected response header matching: $required"
+              exit 1
+            fi
+          done
+
+          not_found=$(curl -sS --max-time 15 -o /dev/null -w "%{http_code}" https://deanbrickland.com/health-check-missing-page)
+          if [ "$not_found" != "404" ]; then
+            echo "::error::Expected 404 for missing path, got $not_found"
+            exit 1
+          fi
+
+      - name: Check edge and GitHub Pages origin TLS certificates (>14 days remaining)
+        run: |
+          set -euo pipefail
+          MIN_SECONDS=$((14 * 86400))
+
+          check_cert() {
+            local label="$1"
+            local target="$2"
+            local cert
+            cert=$(echo | openssl s_client -connect "$target" -servername deanbrickland.com 2>/dev/null | openssl x509)
+            echo "=== $label ($target) ==="
+            echo "$cert" | openssl x509 -noout -subject -issuer -dates
+            if ! echo "$cert" | openssl x509 -noout -checkend "$MIN_SECONDS"; then
+              echo "::error::$label TLS certificate expires within 14 days!"
+              exit 1
+            fi
+          }
+
+          check_cert "Cloudflare edge" "deanbrickland.com:443"
+          check_cert "GitHub Pages origin" "185.199.108.153:443"
