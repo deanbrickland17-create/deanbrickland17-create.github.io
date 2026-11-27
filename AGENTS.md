@@ -54,7 +54,7 @@ Rules:
 
 ## Email / anti-scraping — do not regress this
 
-`dean@deanbrickland.com` was harvested by spam bots once already. The
+The contact address was harvested by spam bots once already. The
 fix in place:
 
 - The contact email is **assembled at runtime by a small inline

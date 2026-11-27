@@ -43,7 +43,7 @@ is no staging step and no build to wait on. See
 - Custom domain: `deanbrickland.com`, set via the `CNAME` file at the
   repo root (required by GitHub Pages — don't remove it).
 - DNS and email are managed in **Cloudflare**:
-  - Email Routing forwards `dean@deanbrickland.com` to a personal
+  - Email Routing forwards the site's contact address to a personal
     Gmail address. The **catch-all rule is intentionally disabled**
     (set to Drop) to avoid amplifying dictionary-attack spam — don't
     re-enable it.
